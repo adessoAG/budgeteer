@@ -1,3 +1,7 @@
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+}
+
 // alle Skripte aus ./gradle.d in sortierter Reihenfolge einbinden
 file('gradle.d').listFiles().sort().each {
     if (it =~ /.*\.gradle$/) {

@@ -118,7 +118,10 @@ dependencies {
     testCompile('org.junit.platform:junit-platform-launcher:1.0.3')
     testCompile('com.github.sbrannen:spring-test-junit5:1.0.3')
 
-    providedCompile group: 'org.projectlombok', name: 'lombok', version: "${lombok_version}"
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombok_version}"
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombok_version}"
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombok_version}"
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombok_version}"
 }
 
 sourceSets {

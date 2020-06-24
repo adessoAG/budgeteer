@@ -21,8 +21,6 @@ apply plugin: 'maven-publish'
 
 
 configurations {
-    querydslapt
-
     all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     all*.exclude group: 'log4j', module: 'log4j'
     all*.exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
@@ -95,11 +93,6 @@ dependencies {
     compile "org.flywaydb:flyway-core"
 
     compile(
-            [group: 'com.querydsl', name: 'querydsl-apt', version: "${query_dsl_version}"],
-            [group: 'com.querydsl', name: 'querydsl-jpa', version: "${query_dsl_version}"]
-    )
-
-    compile(
             [group: 'org.keycloak', name: 'keycloak-spring-boot-adapter', version: "${keycloak_spring_boot_version}"],
             [group: 'org.keycloak', name: 'keycloak-tomcat8-adapter', version: "${keycloak_spring_boot_version}"]
     )
@@ -134,33 +127,6 @@ sourceSets {
             srcDirs = ['src/generated/java']
         }
     }
-}
-
-task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates the QueryDSL query types') {
-
-    source = sourceSets.main.java
-    classpath = configurations.compile + configurations.querydslapt
-    options.compilerArgs = [
-            "-proc:only",
-            "-processor", "com.querydsl.apt.jpa.JPAAnnotationProcessor"
-    ]
-
-    destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
-}
-
-compileJava {
-    dependsOn generateQueryDSL
-    source generateQueryDSL.destinationDir
-}
-
-compileGeneratedJava {
-    dependsOn generateQueryDSL
-    options.warnings = false
-    classpath += sourceSets.main.runtimeClasspath
-}
-
-clean {
-    delete sourceSets.generated.java.srcDirs
 }
 
 bootRun {

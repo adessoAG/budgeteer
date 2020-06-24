@@ -1,7 +1,3 @@
-task wrapper(type: Wrapper) {
-    gradleVersion '4.7'
-}
-
 // alle Skripte aus ./gradle.d in sortierter Reihenfolge einbinden
 file('gradle.d').listFiles().sort().each {
     if (it =~ /.*\.gradle$/) {
@@ -53,7 +49,7 @@ subprojects {
         reports {
             xml.enabled false
             csv.enabled false
-            html.destination "${buildDir}/jacocoHtml"
+            html.destination file("${buildDir}/jacocoHtml")
         }
     }
 

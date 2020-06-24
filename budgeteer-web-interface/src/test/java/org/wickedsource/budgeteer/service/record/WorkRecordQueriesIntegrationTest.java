@@ -3,10 +3,10 @@ package org.wickedsource.budgeteer.service.record;
 import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
-import com.querydsl.core.types.Predicate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.wickedsource.budgeteer.IntegrationTestTemplate;
 import org.wickedsource.budgeteer.ListUtil;
 import org.wickedsource.budgeteer.persistence.record.WorkRecordEntity;
@@ -31,7 +31,7 @@ class WorkRecordQueriesIntegrationTest extends IntegrationTestTemplate {
     @DatabaseTearDown(value = "findByFilter.xml", type = DatabaseOperation.DELETE_ALL)
     void testFindByEmptyFilter() throws Exception {
         WorkRecordFilter filter = new WorkRecordFilter(1L);
-        Predicate query = WorkRecordQueries.findByFilter(filter);
+        Specification<WorkRecordEntity> query = WorkRecordQueries.findByFilter(filter);
         List<WorkRecordEntity> records = ListUtil.toArrayList(repository.findAll(query));
         Assertions.assertEquals(4, records.size());
     }
@@ -42,7 +42,7 @@ class WorkRecordQueriesIntegrationTest extends IntegrationTestTemplate {
     void testFindByPersonFilter() throws Exception {
         WorkRecordFilter filter = new WorkRecordFilter(1L);
         filter.getPersonList().add(new PersonBaseData(1L));
-        Predicate query = WorkRecordQueries.findByFilter(filter);
+        Specification<WorkRecordEntity> query = WorkRecordQueries.findByFilter(filter);
         List<WorkRecordEntity> records = ListUtil.toArrayList(repository.findAll(query));
         Assertions.assertEquals(2, records.size());
     }
@@ -53,7 +53,7 @@ class WorkRecordQueriesIntegrationTest extends IntegrationTestTemplate {
     void testFindByBudgetFilter() throws Exception {
         WorkRecordFilter filter = new WorkRecordFilter(1L);
         filter.getBudgetList().add(new BudgetBaseData(1L, "budget1"));
-        Predicate query = WorkRecordQueries.findByFilter(filter);
+        Specification<WorkRecordEntity> query = WorkRecordQueries.findByFilter(filter);
         List<WorkRecordEntity> records = ListUtil.toArrayList(repository.findAll(query));
         Assertions.assertEquals(2, records.size());
     }
@@ -64,7 +64,7 @@ class WorkRecordQueriesIntegrationTest extends IntegrationTestTemplate {
     void testFindByDateFilter() throws Exception {
         WorkRecordFilter filter = new WorkRecordFilter(1L);
         filter.setDateRange(new DateRange(format.parse("01.01.2015"), format.parse("15.08.2015")));
-        Predicate query = WorkRecordQueries.findByFilter(filter);
+        Specification<WorkRecordEntity> query = WorkRecordQueries.findByFilter(filter);
         List<WorkRecordEntity> records = ListUtil.toArrayList(repository.findAll(query));
         Assertions.assertEquals(3, records.size());
     }
@@ -77,7 +77,7 @@ class WorkRecordQueriesIntegrationTest extends IntegrationTestTemplate {
         filter.getPersonList().add(new PersonBaseData(1L));
         filter.getBudgetList().add(new BudgetBaseData(1L, "budget1"));
         filter.setDateRange(new DateRange(format.parse("01.01.2015"), format.parse("02.01.2015")));
-        Predicate query = WorkRecordQueries.findByFilter(filter);
+        Specification<WorkRecordEntity> query = WorkRecordQueries.findByFilter(filter);
         List<WorkRecordEntity> records = ListUtil.toArrayList(repository.findAll(query));
         Assertions.assertEquals(2, records.size());
     }

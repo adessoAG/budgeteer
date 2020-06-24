@@ -1,7 +1,7 @@
 package org.wickedsource.budgeteer.service.record;
 
-import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.wickedsource.budgeteer.ListUtil;
 import org.wickedsource.budgeteer.persistence.record.*;
@@ -194,8 +194,8 @@ public class RecordService {
      * @return filtered list of records.
      */
     public List<WorkRecord> getFilteredRecords(WorkRecordFilter filter) {
-        Predicate query = WorkRecordQueries.findByFilter(filter);
-        List<WorkRecord> workRecords =  recordMapper.map(ListUtil.toArrayList(workRecordRepository.findAll(query)));
+        Specification<WorkRecordEntity> query = WorkRecordQueries.findByFilter(filter);
+        List<WorkRecord> workRecords = recordMapper.map(ListUtil.toArrayList(workRecordRepository.findAll(query)));
         switch (filter.getColumnToSort().getObject()) {
             case BUDGET:
                 workRecords.sort(Comparator.comparing(WorkRecord::getBudgetName));

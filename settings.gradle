@@ -1,4 +1,3 @@
-enableFeaturePreview('STABLE_PUBLISHING')
 include 'budgeteer-web-interface'
 include 'budgeteer-importer-api'
 include 'budgeteer-aproda-importer'

@@ -6,8 +6,8 @@ buildscript {
     }
 
     dependencies{
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.6.2"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.16.0"
         classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: "${spring_boot_version}"
         classpath group: 'org.springframework', name: 'springloaded', version: "${springloaded_version}"
     }
@@ -52,14 +52,17 @@ repositories {
 }
 
 dependencies {
-    compile project(':budgeteer-aproda-importer')
-    compile project(':budgeteer-ubw-importer')
-    compile project(':budgeteer-resourceplan-importer')
-    compile project(':budgeteer-report-exporter')
+    implementation project(':budgeteer-importer-api')
+    implementation project(':budgeteer-aproda-importer')
+    implementation project(':budgeteer-ubw-importer')
+    implementation project(':budgeteer-resourceplan-importer')
+    implementation project(':budgeteer-report-exporter')
 
-    compile(group: 'org.springframework', name: 'spring-web', version: "${spring_version}")
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: "${poi_version}"
 
-    compile(
+    implementation(group: 'org.springframework', name: 'spring-web', version: "${spring_version}")
+
+    implementation(
             [group: 'org.apache.wicket', name: 'wicket-spring', version: "${wicket_spring_version}"],
             [group: 'org.apache.wicket', name: 'wicket-extensions', version: "${wicket_spring_version}"],
             [group: 'org.wicketstuff', name: 'wicketstuff-lazymodel', version: "${wicketstuff_lazymodel_version}"],
@@ -67,8 +70,8 @@ dependencies {
             [group: 'de.adesso.wicked-charts', name: 'wicked-charts-wicket7', version: "${wickedcharts_version}"]
     )
 
-    compile group: 'org.springframework', name: 'spring-webmvc', version: "${spring_version}"
-    compile(
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: "${spring_version}"
+    implementation(
             [group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: "${spring_boot_version}"],
             [group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${spring_boot_version}"],
             [group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: "${spring_boot_version}"],
@@ -77,27 +80,27 @@ dependencies {
     )
     providedCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: "${spring_boot_version}")
 
-    compile group: 'org.slf4j', name: 'slf4j-api', version: "${slf4j_version}"
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: "${logback_version}"
-    compile group: 'ch.qos.logback', name: 'logback-core', version: "${logback_version}"
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: "${slf4j_version}"
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: "${logback_version}"
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: "${logback_version}"
 
-    compile group: 'org.reflections', name: 'reflections', version: "${reflections_version}"
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: "${commons_lang_version}"
-    compile group: 'commons-codec', name: 'commons-codec', version: "${commons_codec_version}"
+    implementation group: 'org.reflections', name: 'reflections', version: "${reflections_version}"
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: "${commons_lang_version}"
+    implementation group: 'commons-codec', name: 'commons-codec', version: "${commons_codec_version}"
 
-    compile group: 'joda-time', name: 'joda-time', version: "${joda_time_version}"
+    implementation group: 'joda-time', name: 'joda-time', version: "${joda_time_version}"
     providedCompile group: 'org.joda', name: 'joda-convert', version: "${joda_convert_version}"
-    compile group: 'org.joda', name: 'joda-money', version: "${joda_money_version}"
-    compile group: 'de.jollyday', name: 'jollyday', version: "${jollyday_version}"
+    implementation group: 'org.joda', name: 'joda-money', version: "${joda_money_version}"
+    implementation group: 'de.jollyday', name: 'jollyday', version: "${jollyday_version}"
 
-    compile "org.flywaydb:flyway-core"
+    implementation "org.flywaydb:flyway-core"
 
-    compile(
+    implementation(
             [group: 'org.keycloak', name: 'keycloak-spring-boot-adapter', version: "${keycloak_spring_boot_version}"],
             [group: 'org.keycloak', name: 'keycloak-tomcat8-adapter', version: "${keycloak_spring_boot_version}"]
     )
 
-    runtime(
+    runtimeOnly(
             [group: 'org.hsqldb', name: 'hsqldb', version: "${hsqldb_version}"],
             [group: 'mysql', name: 'mysql-connector-java', version: "${mysql_version}"],
             files("lib/ojdbc7.jar", "lib/orai18n.jar")
@@ -105,18 +108,18 @@ dependencies {
 
     runtime 'org.postgresql:postgresql'
 
-    testCompile(
+    testImplementation(
             [group: 'org.kubek2k', name: 'springockito', version: "${springockito_version}"],
             [group: 'org.kubek2k', name: 'springockito-annotations', version: "${springockito_version}"],
             [group: 'com.github.springtestdbunit', name: 'spring-test-dbunit', version: "${spring_dbunit_version}"],
             [group: 'org.dbunit', name: 'dbunit', version: "${dbunit_version}"],
     )
 
-    testCompile "org.springframework.boot:spring-boot-starter-test"
-    testCompile group: 'org.springframework.security', name: 'spring-security-test', version: "${spring_security_test_version}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: "${spring_security_test_version}"
 
-    testCompile('org.junit.platform:junit-platform-launcher:1.0.3')
-    testCompile('com.github.sbrannen:spring-test-junit5:1.0.3')
+    testImplementation('org.junit.platform:junit-platform-launcher:1.0.3')
+    testImplementation('com.github.sbrannen:spring-test-junit5:1.0.3')
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombok_version}"
     testCompileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombok_version}"
@@ -269,7 +272,7 @@ bintray {
 publishing {
     publications {
         mavenPublication(MavenPublication) {
-            artifact(file("$libsDir/${project.name}-${project.version}" + '.war')) {
+            artifact(file("$libsDirectory/${project.name}-${project.version}" + '.war')) {
                 classifier 'exec'
             }
             groupId 'de.adesso.budgeteer'

@@ -41,7 +41,7 @@ public class PersonDetailsPage extends BasePage {
         add(new BookmarkablePageLink<PersonWeekReportPage>("monthReportLink", PersonMonthReportPage.class, PersonMonthReportPage.createParameters(getParameterId())));
         add(new BookmarkablePageLink<PersonWeekReportPage>("hoursLink", PersonHoursPage.class, PersonHoursPage.createParameters(getParameterId())));
 
-        Form deleteForm = new ConfirmationForm("deleteForm", this, "confirmation.delete") {
+        Form<Void> deleteForm = new ConfirmationForm<Void>("deleteForm", this, "confirmation.delete") {
             @Override
             public void onSubmit() {
 
@@ -69,7 +69,7 @@ public class PersonDetailsPage extends BasePage {
     }
 
     private Link createEditPersonLink(String id) {
-        return new Link(id) {
+        return new Link<Void>(id) {
             @Override
             public void onClick() {
                 WebPage page = new EditPersonPage(EditPersonPage.createParameters(getParameterId()), PersonDetailsPage.class, getPageParameters());

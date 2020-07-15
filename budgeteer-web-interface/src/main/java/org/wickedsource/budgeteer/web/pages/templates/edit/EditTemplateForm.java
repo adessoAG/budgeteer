@@ -28,6 +28,7 @@ import org.wickedsource.budgeteer.web.pages.base.delete.DeleteDialog;
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
 import org.wickedsource.budgeteer.web.pages.templates.TemplatesPage;
 import org.wickedsource.budgeteer.web.pages.templates.templateimport.TemplateFormInputDto;
+import org.wicketstuff.lambda.components.ComponentFactory;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -70,7 +71,7 @@ public class EditTemplateForm extends Form<TemplateFormInputDto> {
 
         add(new AjaxButton("save") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 try {
                     if(model(from(templateFormInputDto)).getObject().getName() == null){
                         error(getString("message.error.no.name"));
@@ -97,7 +98,7 @@ public class EditTemplateForm extends Form<TemplateFormInputDto> {
             }
 
             @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
+            protected void onError(AjaxRequestTarget target) {
                 target.add(feedback);
             }
         });
@@ -112,7 +113,7 @@ public class EditTemplateForm extends Form<TemplateFormInputDto> {
         templateFormInputDto.setType(template.getType());
         templateFormInputDto.setDefault(template.isDefault());
 
-        AjaxLink checkBox = new AjaxLink("setAsDefault") {
+        AjaxLink<Void> checkBox = new AjaxLink<Void>("setAsDefault") {
             @Override
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
                 if(templateFormInputDto.isDefault()){

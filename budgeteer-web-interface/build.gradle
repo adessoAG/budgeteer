@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
 
-    dependencies{
+    dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.16.0"
         classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: "${spring_boot_version}"
@@ -65,7 +65,8 @@ dependencies {
             [group: 'org.apache.wicket', name: 'wicket-extensions', version: "${wicket_spring_version}"],
             [group: 'org.wicketstuff', name: 'wicketstuff-lazymodel', version: "${wicketstuff_lazymodel_version}"],
             [group: 'org.wicketstuff', name: 'wicketstuff-tinymce4', version: "${wicketstuff_tinymce4_version}"],
-            [group: 'de.adesso.wicked-charts', name: 'wicked-charts-wicket7', version: "${wickedcharts_version}"]
+            [group: 'org.wicketstuff', name: 'wicketstuff-lambda-components', version: "${wicketstuff_tinymce4_version}"],
+            [group: 'de.adesso.wicked-charts', name: 'wicked-charts-wicket8', version: "${wickedcharts_version}"]
     )
 
     implementation(

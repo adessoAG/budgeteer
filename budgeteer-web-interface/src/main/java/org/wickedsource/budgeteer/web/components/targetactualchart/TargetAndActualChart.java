@@ -1,7 +1,7 @@
 package org.wickedsource.budgeteer.web.components.targetactualchart;
 
 
-import de.adesso.wickedcharts.wicket7.chartjs.Chart;
+import de.adesso.wickedcharts.wicket8.chartjs.Chart;
 import org.apache.wicket.model.IModel;
 import org.wickedsource.budgeteer.service.statistics.TargetAndActual;
 

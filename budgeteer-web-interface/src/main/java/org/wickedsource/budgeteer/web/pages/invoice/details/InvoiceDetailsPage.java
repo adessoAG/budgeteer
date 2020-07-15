@@ -35,7 +35,7 @@ public class InvoiceDetailsPage extends BasePage {
         highlights.setOutputMarkupId(true);
         add(highlights);
 
-        add(new Link("editLink") {
+        add(new Link<Void>("editLink") {
             @Override
             public void onClick() {
                 WebPage page = new EditInvoicePage(EditInvoicePage.createEditInvoiceParameters(getParameterId()), InvoiceDetailsPage.class, getPageParameters());
@@ -48,7 +48,7 @@ public class InvoiceDetailsPage extends BasePage {
         Label taxLinkDescriptionLabel = new Label("taxLinkDescription", new ResourceModel("taxLinkDescriptionShow"));
         taxLinkDescriptionLabel.setOutputMarkupId(true);
 
-        AjaxLink taxLink = new AjaxLink("taxLink") {
+        AjaxLink<Void> taxLink = new AjaxLink<Void>("taxLink") {
             @Override
             protected void onConfigure() {
                 highlights.setTaxInformationVisible(taxVisible);
@@ -76,7 +76,7 @@ public class InvoiceDetailsPage extends BasePage {
         taxLink.add(taxLinkDescriptionLabel);
         add(taxLink);
 
-        Form deleteForm = new ConfirmationForm("deleteForm", this, "confirmation.delete") {
+        Form<Void> deleteForm = new ConfirmationForm<Void>("deleteForm", this, "confirmation.delete") {
             @Override
             public void onSubmit() {
                 invoiceService.deleteInvoice(getParameterId());

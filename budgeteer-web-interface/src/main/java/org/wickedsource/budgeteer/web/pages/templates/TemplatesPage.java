@@ -27,7 +27,7 @@ public class TemplatesPage extends BasePage {
 
     private Link createImportLink(String id) {
         final ImportTemplatesPage importPage = new ImportTemplatesPage(TemplatesPage.class, getPageParameters());
-        return new Link(id) {
+        return new Link<Void>(id) {
             @Override
             public void onClick() {
                 setResponsePage(importPage);

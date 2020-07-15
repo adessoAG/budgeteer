@@ -57,7 +57,7 @@ public class TemplatesTable extends Panel {
                 item.add(new Label("description", model(from(item.getModel()).getDescription())));
                 item.add(new Label("type", model(from(item.getModel()).getType()).getObject().toString()));
                 item.add(createCheckbox(item));
-                item.add(new Link("editPage") {
+                item.add(new Link<Void>("editPage") {
                     @Override
                     public void onClick() {
                         WebPage page = new EditTemplatePage(TemplatesPage.class, getPage().getPageParameters(), TemplatesPage.createParameters(item.getModelObject().getId()));
@@ -88,7 +88,7 @@ public class TemplatesTable extends Panel {
         //Unfortunately I came across quite a few issues with checkboxes, so
         //in the end they are simulated with Links + Labels (which in turn have their own problems,
         //like not being sortable in the table
-        AjaxLink checkBox = new AjaxLink("setAsDefault"){
+        AjaxLink checkBox = new AjaxLink<Void>("setAsDefault"){
 
             @Override
             public void onClick(AjaxRequestTarget target){
@@ -127,7 +127,7 @@ public class TemplatesTable extends Panel {
             TemplateFilter filter = (TemplateFilter) payload;
             TemplateListModel model = (TemplateListModel) getDefaultModel();
             model.setFilter(filter);
-            RequestCycle.get().find(AjaxRequestTarget.class).add(this, this.getMarkupId());
+            RequestCycle.get().find(AjaxRequestTarget.class).ifPresent(target -> target.add(this, this.getMarkupId()));
         }
     }
 }

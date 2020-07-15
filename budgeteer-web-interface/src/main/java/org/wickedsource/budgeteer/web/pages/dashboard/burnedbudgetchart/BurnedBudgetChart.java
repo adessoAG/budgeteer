@@ -1,6 +1,6 @@
 package org.wickedsource.budgeteer.web.pages.dashboard.burnedbudgetchart;
 
-import de.adesso.wickedcharts.wicket7.chartjs.Chart;
+import de.adesso.wickedcharts.wicket8.chartjs.Chart;
 
 import java.io.Serializable;
 

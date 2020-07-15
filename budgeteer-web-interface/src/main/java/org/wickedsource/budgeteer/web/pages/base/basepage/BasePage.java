@@ -93,7 +93,7 @@ public abstract class BasePage extends WebPage {
     }
 
     private Link createProjectChangeLink(String id) {
-        return new Link(id) {
+        return new Link<Void>(id) {
             @Override
             public void onClick() {
                 setResponsePage(new SelectProjectPage(this.getWebPage().getClass(), getPageParameters()));
@@ -102,7 +102,7 @@ public abstract class BasePage extends WebPage {
     }
 
     private Link createLogoutLink(String id) {
-        return new Link(id) {
+        return new Link<Void>(id) {
             @Override
             public void onClick() {
                 BudgeteerSession.get().logout();
@@ -112,7 +112,7 @@ public abstract class BasePage extends WebPage {
     }
 
     private Link createMyProfileLink(String id) {
-        return new Link(id) {
+        return new Link<Void>(id) {
             @Override
             public void onClick() {
                 setResponsePage(new EditUserPage(this.getWebPage().getClass(), new PageParameters().add("userId", BudgeteerSession.get().getLoggedInUser().getId())));

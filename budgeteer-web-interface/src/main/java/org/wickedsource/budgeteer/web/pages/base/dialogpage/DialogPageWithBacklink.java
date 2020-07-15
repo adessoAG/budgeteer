@@ -23,7 +23,7 @@ public abstract class DialogPageWithBacklink extends DialogPage {
     }
 
     protected Link createBacklink(String id) {
-        return new Link(id) {
+        return new Link<Void>(id) {
             @Override
             public void onClick() {
                 goBack();

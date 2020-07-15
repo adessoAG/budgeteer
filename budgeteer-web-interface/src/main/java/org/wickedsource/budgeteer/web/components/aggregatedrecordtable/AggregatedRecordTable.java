@@ -72,6 +72,7 @@ public class AggregatedRecordTable extends Panel {
                 //Label differenceLabel = new MoneyLabel("difference", new BudgetUnitMoneyModel(model(from(item.getModel()).getDifference()))) {
                     @Override
                     protected void onConfigure() {
+                        super.onConfigure();
                         IModel<Money> model = (IModel<Money>) getDefaultModel();
                         if (model.getObject().isPositive()) {
                             add(new AttributeAppender("class", "text-green"));
@@ -99,4 +100,5 @@ public class AggregatedRecordTable extends Panel {
         table.add(new Label("differenceLabel", new TaxLabelModel(
                 new StringResourceModel("aggregated.table.budget.differenceLabel", this))));
     }
+
 }

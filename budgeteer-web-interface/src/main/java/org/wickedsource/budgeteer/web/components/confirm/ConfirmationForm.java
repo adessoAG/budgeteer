@@ -7,7 +7,7 @@ import org.apache.wicket.markup.html.form.Form;
 /**
  * A form that shows a javascript confirmation dialog before submitting.
  */
-public abstract class ConfirmationForm extends Form {
+public abstract class ConfirmationForm<T> extends Form<T> {
 
     public ConfirmationForm(String id, String confirmationMessage) {
         super(id);

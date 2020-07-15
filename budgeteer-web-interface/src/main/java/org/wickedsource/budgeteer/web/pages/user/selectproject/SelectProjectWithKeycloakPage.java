@@ -87,9 +87,9 @@ public class SelectProjectWithKeycloakPage extends DialogPage {
 
         AjaxSubmitLink markProjectAsDefault = new AjaxSubmitLink ("markProject") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 try {
-                    projectService.setDefaultProject(BudgeteerSession.get().getLoggedInUser().getId(), ((ProjectBaseData) form.getModelObject()).getId());
+                    projectService.setDefaultProject(BudgeteerSession.get().getLoggedInUser().getId(), ((ProjectBaseData) getForm().getModelObject()).getId());
                     info(getString("chooseProjectForm.defaultProject.successful"));
                 } catch(Exception e){
                     error(getString("chooseProjectForm.defaultProject.failed"));
@@ -100,8 +100,8 @@ public class SelectProjectWithKeycloakPage extends DialogPage {
 
         AjaxSubmitLink goButton = new AjaxSubmitLink ("goButton") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                BudgeteerSession.get().setProjectId(((ProjectBaseData) form.getModelObject()).getId());
+            protected void onSubmit(AjaxRequestTarget target) {
+                BudgeteerSession.get().setProjectId(((ProjectBaseData) getForm().getModelObject()).getId());
                 setResponsePage(DashboardPage.class);
             }
         };
@@ -113,7 +113,7 @@ public class SelectProjectWithKeycloakPage extends DialogPage {
     }
 
     private Link createLogoutLink(String id) {
-        return new Link(id) {
+        return new Link<Void>(id) {
             @Override
             public void onClick() {
                 HttpServletRequest request = (HttpServletRequest) getRequestCycle().getRequest().getContainerRequest();

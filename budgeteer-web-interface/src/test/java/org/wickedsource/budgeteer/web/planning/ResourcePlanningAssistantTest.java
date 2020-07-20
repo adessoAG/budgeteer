@@ -1,10 +1,10 @@
 package org.wickedsource.budgeteer.web.planning;
 
-import org.joda.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.wickedsource.budgeteer.MoneyUtil;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 
 class ResourcePlanningAssistantTest {
@@ -58,6 +58,6 @@ class ResourcePlanningAssistantTest {
     }
 
 	private LocalDate getDate(int year, int oldJUDMonth, int dayOfMonth) {
-		return new LocalDate(year, oldJUDMonth + 1, dayOfMonth);
+		return LocalDate.of(year, oldJUDMonth + 1, dayOfMonth);
     }
 }

@@ -1,6 +1,5 @@
 package org.wickedsource.budgeteer.web.pages.dashboard.dailyratechart;
 
-import com.google.common.collect.Lists;
 import de.adesso.wickedcharts.chartjs.ChartConfiguration;
 import de.adesso.wickedcharts.chartjs.chartoptions.CallbackFunction;
 import de.adesso.wickedcharts.chartjs.chartoptions.ChartType;

@@ -86,8 +86,6 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: "${commons_lang_version}"
     implementation group: 'commons-codec', name: 'commons-codec', version: "${commons_codec_version}"
 
-    implementation group: 'joda-time', name: 'joda-time', version: "${joda_time_version}"
-    providedCompile group: 'org.joda', name: 'joda-convert', version: "${joda_convert_version}"
     implementation group: 'org.joda', name: 'joda-money', version: "${joda_money_version}"
     implementation group: 'de.jollyday', name: 'jollyday', version: "${jollyday_version}"
 

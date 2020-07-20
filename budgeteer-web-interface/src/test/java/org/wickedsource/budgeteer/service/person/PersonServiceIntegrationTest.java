@@ -5,7 +5,6 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
-import org.joda.time.DateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,10 @@ import org.wickedsource.budgeteer.service.budget.BudgetBaseData;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 class PersonServiceIntegrationTest extends IntegrationTestTemplate {
@@ -121,13 +124,11 @@ class PersonServiceIntegrationTest extends IntegrationTestTemplate {
 
         List<String> warnings = service.getOverlapWithManuallyEditedRecords(person, 1);
         Assertions.assertEquals(1, warnings.size());
-
-        DateTime startDate = new DateTime(2015, 1, 1, 0, 0);
-        DateTime endDate = new DateTime(2015, 8, 16, 0, 0);
         SimpleDateFormat dateFormat = new SimpleDateFormat();
-
+        Date startDate = Date.from(LocalDate.of(2015, 1, 1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        Date endDate = Date.from(LocalDate.of(2015, 8, 16).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         Assertions.assertEquals("A work record in the range " +
-                dateFormat.format(startDate.toDate()) +" - " + dateFormat.format(endDate.toDate()) +
+                dateFormat.format(startDate) +" - " + dateFormat.format(endDate) +
                 " (Exact Date and Amount: 2015-01-01, EUR 100.00) for budget \"Budget 1\" has " +
                 "already been edited manually and will not be overwritten.", warnings.get(0));
     }

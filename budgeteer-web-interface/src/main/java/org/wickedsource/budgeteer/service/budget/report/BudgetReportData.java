@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
+public
 class BudgetReportData {
 	private long id;
 	private Date from;

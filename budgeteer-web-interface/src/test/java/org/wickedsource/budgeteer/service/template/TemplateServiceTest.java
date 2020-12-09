@@ -31,31 +31,32 @@ class TemplateServiceTest extends ServiceTestTemplate {
     TemplateRepository templateRepository;
 
     @Test
-    void doImportTest() {
+    void doImportTest() throws IOException, InvalidFormatException {
         Mockito.when(templateRepository.save(any(TemplateEntity.class))).thenReturn(new TemplateEntity());
         TemplateFormInputDto testDto = new TemplateFormInputDto(1);
         testDto.setName("TEST");
         testDto.setDescription("TEST_D");
         testDto.setType(ReportType.BUDGET_REPORT);
         testDto.setDefault(false);
-        templateService.doImport(1, new ImportFile("exampleTemplate1.xlsx",
-                        getClass().getResourceAsStream("exampleTemplate1.xlsx")),
+        ImportFile importFile = new ImportFile("exampleTemplate1.xlsx",
+                getClass().getResourceAsStream("exampleTemplate1.xlsx"));
+        templateService.doImport(1, (XSSFWorkbook) WorkbookFactory.create(importFile.getInputStream()),
                         model(from(testDto)));
         Mockito.verify(templateRepository, times(1)).save(any(TemplateEntity.class));
     }
 
     @Test
-    void editTemplateTest() {
+    void editTemplateTest() throws IOException, InvalidFormatException {
         Mockito.when(templateRepository.save(any(TemplateEntity.class))).thenReturn(new TemplateEntity());
 
+        ImportFile importFile = new ImportFile("exampleTemplate1.xlsx", getClass().getResourceAsStream("exampleTemplate1.xlsx"));
         TemplateFormInputDto testDto = new TemplateFormInputDto(1);
         testDto.setName("TEST");
         testDto.setDescription("TEST_D");
         testDto.setType(ReportType.BUDGET_REPORT);
         testDto.setDefault(true);
         templateService.editTemplate(1, 1,
-                new ImportFile("exampleTemplate1.xlsx",
-                        getClass().getResourceAsStream("exampleTemplate1.xlsx")), model(from(testDto)));
+                (XSSFWorkbook) WorkbookFactory.create(importFile.getInputStream()), model(from(testDto)));
         Mockito.verify(templateRepository, times(1)).save(any(TemplateEntity.class));
     }
 

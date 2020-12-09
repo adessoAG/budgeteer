@@ -1,5 +1,8 @@
 package org.wickedsource.budgeteer.web.pages.templates.templateimport;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -87,21 +90,41 @@ public class ImportTemplatesPage extends DialogPageWithBacklink {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 try {
+                    ImportFile file = new ImportFile(fileUploads.get(0).getClientFileName(), fileUploads.get(0).getInputStream());
+
                     if(model(from(templateFormInputDto)).getObject().getName() == null){
                         error(getString("message.error.no.name"));
                     }
+                    else if (service.isTemplateNameAlreadyTaken(BudgeteerSession.get().getProjectId(), model(from(templateFormInputDto)).getObject().getName())) {
+                        error(getString("message.error.name.alreadyTaken"));
+                    }
+
                     if(model(from(templateFormInputDto)).getObject().getType() == null){
                         error(getString("message.error.no.type"));
                     }
-                    ImportFile file = new ImportFile(fileUploads.get(0).getClientFileName(), fileUploads.get(0).getInputStream());
-                    if(model(from(templateFormInputDto)).getObject().getName() != null && model(from(templateFormInputDto)).getObject().getType() != null){
-                        service.doImport(BudgeteerSession.get().getProjectId(), file, model(from(templateFormInputDto)));
-                        success(getString("message.success"));
+                    if(!service.isFileExtensionAllowed(file)){
+                        error(getString("message.invalidFormatException"));
                     }
+
+                    if (!hasErrorMessage()) {
+                        XSSFWorkbook uploadedWorkbook = (XSSFWorkbook) WorkbookFactory.create(file.getInputStream());
+
+                        if (model(from(templateFormInputDto)).getObject().getType() != null &&
+                                !service.validateUploadedTemplateFile(uploadedWorkbook, model(from(templateFormInputDto)).getObject().getType())){
+                            error(getString("message.invalidFileContent"));
+                        } else {
+                            service.doImport(BudgeteerSession.get().getProjectId(), uploadedWorkbook, model(from(templateFormInputDto)));
+                            success(getString("message.success"));
+                        }
+                    }
+
+
                 }  catch (IOException e) {
                     error(String.format(getString("message.ioError"), e.getMessage()));
                 }  catch (IllegalArgumentException e) {
                     error(String.format(getString("message.importError"), e.getMessage()));
+                }  catch (InvalidFormatException e) {
+                    error(getString("message.invalidFormatException"));
                 }
                 target.add(feedback);
             }

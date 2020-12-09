@@ -6,6 +6,12 @@ import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.wickedsource.budgeteer.service.ReportType;
+import org.wickedsource.budgeteer.service.template.TemplateService;
 import org.wickedsource.budgeteer.web.AbstractWebTestTemplate;
 import org.wickedsource.budgeteer.web.pages.templates.TemplatesPage;
 import org.wickedsource.budgeteer.web.pages.templates.templateimport.ImportTemplatesPage;
@@ -15,6 +21,9 @@ import java.net.URISyntaxException;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class ImportTemplatesPageTest extends AbstractWebTestTemplate {
+
+    @Autowired
+    TemplateService templateServiceMock;
 
     @Test
     void testRender() {
@@ -71,6 +80,9 @@ public class ImportTemplatesPageTest extends AbstractWebTestTemplate {
 
     @Test
     void NoNameNoDescriptionWithFileTest(){ //yes I know this is a horrible name
+        Mockito.doCallRealMethod().when(templateServiceMock).validateUploadedTemplateFile(Mockito.any(), Mockito.eq(ReportType.CONTRACT_REPORT));
+        Mockito.doCallRealMethod().when(templateServiceMock).isFileExtensionAllowed(Mockito.any());
+
         WicketTester tester = getTester();
         ImportTemplatesPage testPage = new ImportTemplatesPage(TemplatesPage.class, new PageParameters());
         tester.startPage(testPage);
@@ -88,6 +100,9 @@ public class ImportTemplatesPageTest extends AbstractWebTestTemplate {
 
     @Test
     public void NoTypeTest(){
+        Mockito.doCallRealMethod().when(templateServiceMock).validateUploadedTemplateFile(Mockito.any(), Mockito.any());
+        Mockito.doCallRealMethod().when(templateServiceMock).isFileExtensionAllowed(Mockito.any());
+
         WicketTester tester = getTester();
         ImportTemplatesPage testPage = new ImportTemplatesPage(TemplatesPage.class, new PageParameters());
         tester.startPage(testPage);
@@ -105,6 +120,9 @@ public class ImportTemplatesPageTest extends AbstractWebTestTemplate {
 
     @Test
     void AllCorrectInputForm(){
+        Mockito.doCallRealMethod().when(templateServiceMock).validateUploadedTemplateFile(Mockito.any(), Mockito.eq(ReportType.CONTRACT_REPORT));
+        Mockito.doCallRealMethod().when(templateServiceMock).isFileExtensionAllowed(Mockito.any());
+
         WicketTester tester = getTester();
         ImportTemplatesPage testPage = new ImportTemplatesPage(TemplatesPage.class, new PageParameters());
         tester.startPage(testPage);
@@ -120,6 +138,36 @@ public class ImportTemplatesPageTest extends AbstractWebTestTemplate {
         tester.assertNoErrorMessage();
         tester.assertFeedbackMessages(null, "The selected files were imported successfully");
         assertThat(tester.getFeedbackMessages(null)).hasSize(1);
+    }
+
+    @Test
+    void incorrectFileExtension(){
+        Mockito.doCallRealMethod().when(templateServiceMock).validateUploadedTemplateFile(Mockito.any(), Mockito.eq(ReportType.BUDGET_REPORT));
+        Mockito.doCallRealMethod().when(templateServiceMock).isFileExtensionAllowed(Mockito.any());
+
+        WicketTester tester = getTester();
+        ImportTemplatesPage testPage = new ImportTemplatesPage(TemplatesPage.class, new PageParameters());
+        tester.startPage(testPage);
+        Assertions.assertNotNull(testPage.get("importForm"));
+        FormTester formTester = tester.newFormTester("importForm", true);
+        formTester.setClearFeedbackMessagesBeforeSubmit(true);
+        formTester.setFile("fileUpload", getIncorrectTemplateFile(), "txt");
+        formTester.setValue("name", "TEST_N");
+        formTester.setValue("description", "TEST_D");
+        formTester.select("type", 1);
+        tester.executeAjaxEvent("importForm:save", "onclick");
+        tester.assertRenderedPage(ImportTemplatesPage.class);
+        tester.assertErrorMessages( "The file did not match the expected file format. Please choose a .xlsx-file.");
+        assertThat(tester.getFeedbackMessages(null)).hasSize(1);
+    }
+
+    private File getIncorrectTemplateFile(){
+        try {
+            return new File(getClass().getResource("incorrectTemplateFile.txt").toURI());
+        }catch (URISyntaxException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private File getExampleTemplate(){

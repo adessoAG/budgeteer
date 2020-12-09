@@ -1,5 +1,7 @@
 package org.wickedsource.budgeteer.web.pages.templates.edit;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -75,23 +77,40 @@ public class EditTemplateForm extends Form<TemplateFormInputDto> {
                     if(model(from(templateFormInputDto)).getObject().getName() == null){
                         error(getString("message.error.no.name"));
                     }
+                    else if (service.isTemplateNameAlreadyTaken(BudgeteerSession.get().getProjectId(),
+                            model(from(templateFormInputDto)).getObject().getName(),
+                            model(from(templateFormInputDto)).getObject())) {
+                        error(getString("message.error.name.alreadyTaken"));
+                    }
                     if(model(from(templateFormInputDto)).getObject().getType() == null){
                         error(getString("message.error.no.type"));
                     }
-                    if(fileUploads != null && fileUploads.size() > 0){
+
+                    XSSFWorkbook uploadedWorkbook = null;
+                    if (fileUploads != null && !fileUploads.isEmpty()) {
                         ImportFile file = new ImportFile(fileUploads.get(0).getClientFileName(), fileUploads.get(0).getInputStream());
-                        if(model(from(templateFormInputDto)).getObject().getName() != null && model(from(templateFormInputDto)).getObject().getType() != null){
-                            service.editTemplate(BudgeteerSession.get().getProjectId(), templateID, file, model(from(templateFormInputDto)));
-                            success(getString("message.success"));
+                        if(!service.isFileExtensionAllowed(file)){
+                            error(getString("message.invalidFormatException"));
+                        } else {
+                            uploadedWorkbook = (XSSFWorkbook) WorkbookFactory.create(file.getInputStream());
+
+                            if (model(from(templateFormInputDto)).getObject().getType() != null &&
+                                    !service.validateUploadedTemplateFile(uploadedWorkbook, model(from(templateFormInputDto)).getObject().getType())){
+                                error(getString("message.invalidFileContent"));
+                            }
                         }
-                    }else if(model(from(templateFormInputDto)).getObject().getName() != null && model(from(templateFormInputDto)).getObject().getType() != null){
-                        service.editTemplate(BudgeteerSession.get().getProjectId(), templateID, null, model(from(templateFormInputDto)));
+                    }
+
+                    if (!hasErrorMessage()) {
+                        service.editTemplate(BudgeteerSession.get().getProjectId(), templateID, uploadedWorkbook, model(from(templateFormInputDto)));
                         success(getString("message.success"));
                     }
                 } catch (IOException e) {
                     error(String.format(getString("message.ioError"), e.getMessage()));
                 }  catch (IllegalArgumentException e) {
                     error(String.format(getString("message.importError"), e.getMessage()));
+                } catch (InvalidFormatException e) {
+                    error(getString("message.invalidFormatException"));
                 }
                 target.add(feedback);
             }

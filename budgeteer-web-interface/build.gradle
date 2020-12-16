@@ -9,7 +9,6 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.16.0"
         classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: "${spring_boot_version}"
-        classpath group: 'org.springframework', name: 'springloaded', version: "${springloaded_version}"
     }
 }
 
@@ -60,8 +59,6 @@ dependencies {
 
     implementation group: 'org.apache.poi', name: 'poi-ooxml', version: "${poi_version}"
 
-    implementation(group: 'org.springframework', name: 'spring-web', version: "${spring_version}")
-
     implementation(
             [group: 'org.apache.wicket', name: 'wicket-spring', version: "${wicket_spring_version}"],
             [group: 'org.apache.wicket', name: 'wicket-extensions', version: "${wicket_spring_version}"],
@@ -70,15 +67,14 @@ dependencies {
             [group: 'de.adesso.wicked-charts', name: 'wicked-charts-wicket7', version: "${wickedcharts_version}"]
     )
 
-    implementation group: 'org.springframework', name: 'spring-webmvc', version: "${spring_version}"
     implementation(
             [group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: "${spring_boot_version}"],
             [group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${spring_boot_version}"],
             [group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: "${spring_boot_version}"],
             [group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: "${spring_boot_version}"],
             [group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: "${spring_boot_version}"],
+            [group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: "${spring_boot_version}"],
     )
-    providedCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: "${spring_boot_version}")
 
     implementation group: 'org.slf4j', name: 'slf4j-api', version: "${slf4j_version}"
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: "${logback_version}"
@@ -133,22 +129,6 @@ sourceSets {
             srcDirs = ['src/generated/java']
         }
     }
-}
-
-bootRun {
-    // default application configuration for running application via bootRun in development mode
-    // (in production, these properties are defined in application.properties)
-    jvmArgs '-Xdebug',
-            '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009',
-            '-Dserver.port=8080',
-            //'-Dspring.datasource.url=jdbc:hsqldb:file:../../database/budgeteer;shutdown=true;hsqldb.write_delay=false;',
-            '-Dspring.datasource.url=jdbc:hsqldb:mem:budgeteer',
-            //'-Dspring.datasource.url=jdbc:hsqldb:hsql://localhost/budgeteer',
-            '-Dspring.datasource.driverClassName=org.hsqldb.jdbcDriver',
-            '-Dspring.datasource.username=sa',
-            '-Dspring.datasource.password=',
-            '-Dflyway.enabled=false',
-            '-Dspring.jpa.hibernate.ddl-auto=update'
 }
 
 test {

@@ -99,8 +99,8 @@ dependencies {
     runtimeOnly(
             [group: 'org.hsqldb', name: 'hsqldb', version: "${hsqldb_version}"],
             [group: 'mysql', name: 'mysql-connector-java', version: "${mysql_version}"],
-            [group: 'com.oracle.jdbc', name: 'ojdbc8', version: '19.8.0.0'],
-            [group: 'com.oracle', name: 'orai18n', version: '11.2.0.3']
+            [group: 'com.oracle.database.jdbc', name: 'ojdbc10', version: '19.8.0.0'],
+            [group: 'com.oracle.database.nls', name: 'orai18n', version: '19.8.0.0']
     )
 
     runtime 'org.postgresql:postgresql'

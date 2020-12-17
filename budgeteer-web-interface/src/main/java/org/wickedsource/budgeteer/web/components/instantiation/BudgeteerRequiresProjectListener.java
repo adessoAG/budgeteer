@@ -55,15 +55,9 @@ public class BudgeteerRequiresProjectListener implements IComponentOnBeforeRende
     private void redirectToSelectProjectIfNeeded(Component component) throws RestartResponseAtInterceptPageException {
         boolean requiresProject = component != null && component.getClass().isAnnotationPresent(NeedsProject.class);
 
-        if(requiresProject) {
-            if(!BudgeteerSession.get().isProjectSelected()) {
-                if(settings.isKeycloakActivated()) {
-                    throw new RestartResponseAtInterceptPageException(SelectProjectWithKeycloakPage.class);
-                } else {
+        if(requiresProject && !BudgeteerSession.get().isProjectSelected()) {
                     final WebPage respPage = new SelectProjectPage("projectForm.project.Required");
                     throw new RestartResponseAtInterceptPageException(respPage);
-                }
-            }
         }
     }
 

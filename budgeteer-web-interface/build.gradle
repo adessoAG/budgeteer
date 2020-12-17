@@ -91,11 +91,6 @@ dependencies {
 
     implementation "org.flywaydb:flyway-core"
 
-    implementation(
-            [group: 'org.keycloak', name: 'keycloak-spring-boot-adapter', version: "${keycloak_spring_boot_version}"],
-            [group: 'org.keycloak', name: 'keycloak-tomcat8-adapter', version: "${keycloak_spring_boot_version}"]
-    )
-
     runtimeOnly(
             [group: 'org.hsqldb', name: 'hsqldb', version: "${hsqldb_version}"],
             [group: 'mysql', name: 'mysql-connector-java', version: "${mysql_version}"],

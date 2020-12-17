@@ -141,11 +141,7 @@ public class ProjectAdministrationPage extends BasePage {
                         projectService.deleteProject(BudgeteerSession.get().getProjectId());
                         BudgeteerSession.get().setProjectSelected(false);
 
-                        if (settings.isKeycloakActivated()) {
-                            setResponsePage(new SelectProjectWithKeycloakPage());
-                        } else {
-                            setResponsePage(new SelectProjectPage(LoginPage.class, new PageParameters()));
-                        }
+                        setResponsePage(new SelectProjectPage(LoginPage.class, new PageParameters()));
                     }
 
                     @Override

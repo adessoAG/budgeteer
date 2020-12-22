@@ -25,7 +25,7 @@ class ContractDataMapperTest extends IntegrationTestTemplate {
     @DatabaseSetup("contractMapperTest.xml")
     @DatabaseTearDown(value = "contractMapperTest.xml", type = DatabaseOperation.DELETE_ALL)
     void whenTaxrateIsNotNull() {
-        ContractEntity contractEntity = contractRepository.findOne(4L);
+        ContractEntity contractEntity = contractRepository.findById(4L).orElseThrow(RuntimeException::new);
         ContractBaseData contractBaseData = testSubject.map(contractEntity);
         Assertions.assertThat(contractBaseData.getTaxRate()).isCloseTo(BigDecimal.valueOf(100), Percentage.withPercentage(10e-8));
     }

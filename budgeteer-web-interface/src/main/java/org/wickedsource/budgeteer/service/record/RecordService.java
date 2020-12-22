@@ -223,7 +223,7 @@ public class RecordService {
     }
 
     public void saveDailyRateForWorkRecord(WorkRecord record) {
-        WorkRecordEntity entity = workRecordRepository.findOne(record.getId());
+        WorkRecordEntity entity = workRecordRepository.findById(record.getId()).orElseThrow(RuntimeException::new);
         entity.setDailyRate(record.getDailyRate());
         entity.setEditedManually(record.isEditedManually());
         workRecordRepository.save(entity);

@@ -25,7 +25,7 @@ public class ProjectEntity implements Serializable {
     @Column(nullable = false, length = 255)
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "PROJECT_USER",
             joinColumns = {@JoinColumn(name = "PROJECT_ID")},
             inverseJoinColumns = {@JoinColumn(name = "USER_ID")})

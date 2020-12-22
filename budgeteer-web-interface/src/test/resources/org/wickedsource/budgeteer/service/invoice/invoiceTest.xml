@@ -7,19 +7,19 @@
     <!-- Contract without two ContractInvoiceFields -->
     <PROJECT id="2" name="project2"/>
     <CONTRACT id="2" CONTRACT_NAME="Test" PROJECT_ID="2" BUDGET="100" INTERNAL_NUMBER="Test" START_DATE="2015-01-01" CONTRACT_TYPE="1" TAXRATE="10"/>
-    <CONTRACT_INVOICE_FIELD id="3" FIELD_NAME="Test Contract Field" CONTRACT_ID="2" />
-    <CONTRACT_INVOICE_FIELD id="4" FIELD_NAME="Test Contract Field 2" CONTRACT_ID="2" />
+    <CONTRACT_INVOICE_FIELD id="300" FIELD_NAME="Test Contract Field" CONTRACT_ID="2" />
+    <CONTRACT_INVOICE_FIELD id="400" FIELD_NAME="Test Contract Field 2" CONTRACT_ID="2" />
 
 
     <!-- Invoice with two InvoiceFields -->
     <PROJECT id="3" name="project3"/>
     <CONTRACT id="3" CONTRACT_NAME="Test" PROJECT_ID="3" BUDGET="100" INTERNAL_NUMBER="Test" START_DATE="2015-01-01" CONTRACT_TYPE="1" TAXRATE="10"/>
-    <CONTRACT_INVOICE_FIELD id="1" FIELD_NAME="Test Contract Field" CONTRACT_ID="3" />
-    <CONTRACT_INVOICE_FIELD id="2" FIELD_NAME="Test Contract Field 2" CONTRACT_ID="3" />
+    <CONTRACT_INVOICE_FIELD id="100" FIELD_NAME="Test Contract Field" CONTRACT_ID="3" />
+    <CONTRACT_INVOICE_FIELD id="200" FIELD_NAME="Test Contract Field 2" CONTRACT_ID="3" />
     <INVOICE id="3" CONTRACT_ID="3" NAME="Test Invoice" INVOICE_SUM="2014" INTERNAL_NUMBER="ABC" YEAR="2014" MONTH="2" />
 
-    <INVOICE_FIELD id="1" INVOICE_ID="3" CONTRACT_INVOICE_FIELD_ID="1" INVOICE_FIELD_VALUE="Test" />
-    <INVOICE_FIELD id="2" INVOICE_ID="3" CONTRACT_INVOICE_FIELD_ID="2" INVOICE_FIELD_VALUE="Test 2" />
+    <INVOICE_FIELD id="100" INVOICE_ID="3" CONTRACT_INVOICE_FIELD_ID="100" INVOICE_FIELD_VALUE="Test" />
+    <INVOICE_FIELD id="200" INVOICE_ID="3" CONTRACT_INVOICE_FIELD_ID="200" INVOICE_FIELD_VALUE="Test 2" />
 
     <!-- Invoice without any InvoiceFields -->
     <PROJECT id="4" name="project4"/>
@@ -29,8 +29,8 @@
     <!-- Invoice without any InvoiceFields but with a contract containing ContractInvoiceFields -->
     <PROJECT id="5" name="project5"/>
     <CONTRACT id="5" CONTRACT_NAME="Test" PROJECT_ID="5" BUDGET="100" INTERNAL_NUMBER="Test" START_DATE="2015-01-01" CONTRACT_TYPE="1" TAXRATE="10"/>
-    <CONTRACT_INVOICE_FIELD id="5" FIELD_NAME="Test Contract Field" CONTRACT_ID="5" />
-    <CONTRACT_INVOICE_FIELD id="6" FIELD_NAME="Test Contract Field 2" CONTRACT_ID="5" />
+    <CONTRACT_INVOICE_FIELD id="500" FIELD_NAME="Test Contract Field" CONTRACT_ID="5" />
+    <CONTRACT_INVOICE_FIELD id="600" FIELD_NAME="Test Contract Field 2" CONTRACT_ID="5" />
     <INVOICE id="5" CONTRACT_ID="5" NAME="Test Invoice" INVOICE_SUM="2014" INTERNAL_NUMBER="ABC"  YEAR="2014" MONTH="2" />
 
 </dataset>

@@ -49,7 +49,7 @@ public class ContractService {
 
     @PreAuthorize("canReadContract(#contractId)")
     public ContractBaseData getContractById(long contractId) {
-        return mapper.map(contractRepository.findOne(contractId));
+        return mapper.map(contractRepository.findById(contractId).orElse(null));
     }
 
     @PreAuthorize("canReadProject(#projectId)")
@@ -61,7 +61,7 @@ public class ContractService {
 
     @PreAuthorize("canReadProject(#projectId)")
     public ContractBaseData getEmptyContractModel(long projectId) {
-        ProjectEntity project = projectRepository.findOne(projectId);
+        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(RuntimeException::new);
         ContractBaseData model = new ContractBaseData(projectId);
         Set<ProjectContractField> fields = project.getContractFields();
         for (ProjectContractField field : fields) {
@@ -71,13 +71,13 @@ public class ContractService {
     }
 
     public long save(ContractBaseData contractBaseData) {
-        ProjectEntity project = projectRepository.findOne(contractBaseData.getProjectId());
+        ProjectEntity project = projectRepository.findById(contractBaseData.getProjectId()).orElseThrow(RuntimeException::new);
         ContractEntity contractEntity = new ContractEntity();
         contractEntity.setId(0);
         contractEntity.setProject(project);
 
         if (contractBaseData.getContractId() != 0) {
-            contractEntity = contractRepository.findOne(contractBaseData.getContractId());
+            contractEntity = contractRepository.findById(contractBaseData.getContractId()).orElseThrow(RuntimeException::new);
         }
         //Update basic information
         contractEntity.setName(contractBaseData.getContractName());
@@ -120,18 +120,18 @@ public class ContractService {
         for (BudgetEntity budgetEntity : budgets) {
             budgetEntity.setContract(null);
         }
-        budgetRepository.save(budgets);
+        budgetRepository.saveAll(budgets);
 
         invoiceRepository.deleteInvoiceFieldsByContractId(contractId);
         invoiceRepository.deleteInvoicesByContractId(contractId);
 
-        contractRepository.delete(contractId);
+        contractRepository.deleteById(contractId);
     }
 
     @PreAuthorize("canReadContract(#contractId)")
     public List<Date> getMonthList(long contractId) {
         List<Date> months = new ArrayList<Date>();
-        ContractEntity contract = contractRepository.findById(contractId);
+        ContractEntity contract = contractRepository.findByIdAndFetchInvoiceFields(contractId);
         Calendar cal = Calendar.getInstance();
         cal.setTime(contract.getStartDate());
         Calendar currentDate = Calendar.getInstance();

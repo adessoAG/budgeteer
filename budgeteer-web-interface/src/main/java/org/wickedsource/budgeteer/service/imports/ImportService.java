@@ -68,7 +68,7 @@ public class ImportService implements ApplicationContextAware {
     public void deleteImport(long importId) {
         workRecordRepository.deleteByImport(importId);
         planRecordRepository.deleteByImport(importId);
-        importRepository.delete(importId);
+        importRepository.deleteById(importId);
     }
 
     /**

@@ -57,7 +57,7 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
         ContractBaseData testObject = new ContractBaseData();
         testObject.setBudget(MoneyUtil.createMoney(12));
         testObject.setContractId(0);
-        testObject.setProjectId(1);
+        testObject.setProjectId(100);
         testObject.setContractName("Test Contract");
         testObject.setContractAttributes(getListOfContractFields());
         testObject.getContractAttributes().add(new DynamicAttributeField("test4", "test4"));
@@ -72,7 +72,7 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
         assertTrue(savedContract.getContractId() > 0);
         assertEquals(5, savedContract.getContractAttributes().size());
 
-        assertEquals(5, projectRepository.findById(savedContract.getProjectId()).getContractFields().size());
+        assertEquals(5, projectRepository.findByIdAndFetchContractFields(savedContract.getProjectId()).getContractFields().size());
     }
 
     /**
@@ -84,7 +84,7 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
     void testSaveNewContract2() {
         ContractBaseData testObject = new ContractBaseData();
         testObject.setContractId(0);
-        testObject.setProjectId(2);
+        testObject.setProjectId(200);
         testObject.setContractName("Test Contract");
         testObject.setContractAttributes(getListOfContractFields());
         testObject.getContractAttributes().add(new DynamicAttributeField("test4", "test4"));
@@ -98,7 +98,7 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
         assertTrue(savedContract.getContractId() > 0);
         assertEquals(5, savedContract.getContractAttributes().size());
 
-        assertEquals(5, projectRepository.findById(savedContract.getProjectId()).getContractFields().size());
+        assertEquals(5, projectRepository.findByIdAndFetchContractFields(savedContract.getProjectId()).getContractFields().size());
     }
 
     /**
@@ -108,9 +108,9 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
     @DatabaseSetup("contractTest.xml")
     @DatabaseTearDown(value = "contractTest.xml", type = DatabaseOperation.DELETE_ALL)
     void testUpdateContract() {
-        ContractBaseData testObject = service.getContractById(4);
+        ContractBaseData testObject = service.getContractById(400L);
 
-        testObject.setBudget(MoneyUtil.createMoney(12));
+        testObject.setBudget(MoneyUtil.createMoney(12.0));
         testObject.setContractName("Test Contract");
         testObject.setInternalNumber("Test Contract");
         testObject.setStartDate(new Date());
@@ -120,8 +120,7 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
 
         long newContractId = service.save(testObject);
 
-        assertEquals(4, newContractId);
-        testObject = null;
+        assertEquals(400L, newContractId);
         ContractBaseData savedContract = service.getContractById(newContractId);
 
         assertEquals("Test Contract", savedContract.getContractName());
@@ -141,7 +140,7 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
             assertTrue(found);
         }
         assertEquals(1, savedContract.getBelongingBudgets().size());
-        assertEquals(6, projectRepository.findById(savedContract.getProjectId()).getContractFields().size());
+        assertEquals(6, projectRepository.findByIdAndFetchContractFields(savedContract.getProjectId()).getContractFields().size());
     }
 
     /**
@@ -151,7 +150,7 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
     @DatabaseSetup("contractTest.xml")
     @DatabaseTearDown(value = "contractTest.xml", type = DatabaseOperation.DELETE_ALL)
     void testUpdateContract1() {
-        ContractBaseData testObject = service.getContractById(5);
+        ContractBaseData testObject = service.getContractById(500L);
 
         testObject.setBudget(MoneyUtil.createMoney(12));
         testObject.setContractName("Test Contract");
@@ -164,8 +163,7 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
 
         long newContractId = service.save(testObject);
 
-        assertEquals(5, newContractId);
-        testObject = null;
+        assertEquals(500L, newContractId);
         ContractBaseData savedContract = service.getContractById(newContractId);
 
         assertEquals("Test Contract", savedContract.getContractName());
@@ -185,36 +183,39 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
             assertTrue(found);
         }
         assertEquals(0, savedContract.getBelongingBudgets().size());
-        assertEquals(7, projectRepository.findById(savedContract.getProjectId()).getContractFields().size());
+        assertEquals(7, projectRepository.findByIdAndFetchContractFields(savedContract.getProjectId()).getContractFields().size());
     }
 
     @Test
     @DatabaseSetup("contractTest.xml")
     @DatabaseTearDown(value = "contractTest.xml", type = DatabaseOperation.DELETE_ALL)
     void testGetEmptyContractModel() {
-        ContractBaseData baseData = service.getEmptyContractModel(1);
+        ContractBaseData baseData = service.getEmptyContractModel(100L);
         assertEquals(0, baseData.getContractAttributes().size());
 
-        baseData = service.getEmptyContractModel(3);
+        baseData = service.getEmptyContractModel(300L);
         assertEquals(2, baseData.getContractAttributes().size());
-        assertEquals("test0", baseData.getContractAttributes().get(0).getName());
-        assertEquals("test1", baseData.getContractAttributes().get(1).getName());
+        Assertions.assertThat(baseData.getContractAttributes())
+                .extracting(DynamicAttributeField::getName)
+                .containsAll(Arrays.asList("test0", "test1"));
     }
 
     @Test
     @DatabaseSetup("contractTest.xml")
     @DatabaseTearDown(value = "contractTest.xml", type = DatabaseOperation.DELETE_ALL)
     void testGetContractById() {
-        ContractBaseData testObject = service.getContractById(3);
+        ContractBaseData testObject = service.getContractById(300L);
 
-        assertEquals(3, testObject.getContractId());
-        assertEquals(3, testObject.getProjectId());
+        assertEquals(300L, testObject.getContractId());
+        assertEquals(300L, testObject.getProjectId());
 
         assertEquals(2, testObject.getContractAttributes().size());
-        assertEquals("test0", testObject.getContractAttributes().get(0).getName());
-        assertEquals("test0", testObject.getContractAttributes().get(0).getValue());
-        assertEquals("test1", testObject.getContractAttributes().get(1).getName());
-        assertEquals("test1", testObject.getContractAttributes().get(1).getValue());
+        Assertions.assertThat(testObject.getContractAttributes())
+                .extracting(DynamicAttributeField::getName)
+                .containsAll(Arrays.asList("test0", "test1"));
+        Assertions.assertThat(testObject.getContractAttributes())
+                .extracting(DynamicAttributeField::getValue)
+                .containsAll(Arrays.asList("test0", "test1"));
 
         assertEquals(1, testObject.getBelongingBudgets().size());
         assertEquals("Budget 1", testObject.getBelongingBudgets().get(0).getName());
@@ -232,7 +233,7 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
     @DatabaseSetup("contractTest.xml")
     @DatabaseTearDown(value = "contractTest.xml", type = DatabaseOperation.DELETE_ALL)
     void testGetContractByIdWithInvoices() {
-        ContractBaseData testObject = service.getContractById(6);
+        ContractBaseData testObject = service.getContractById(600L);
         assertEquals(2, testObject.getBelongingInvoices().size());
     }
 
@@ -252,20 +253,20 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
     @DatabaseSetup("contractDeletionTest.xml")
     @DatabaseTearDown(value = "contractDeletionTest.xml", type = DatabaseOperation.DELETE_ALL)
     void testDeleteContract() {
-        assertNotNull(service.getContractById(3));
-        assertEquals(contractRepository.findContractFieldsByContractId(3L).size(), 2);
-        assertEquals(contractRepository.findContractFieldsByContractId(4L).size(), 1);
-        service.deleteContract(3);
-        assertEquals(contractRepository.findContractFieldsByContractId(3L).size(), 0);
-        assertEquals(contractRepository.findContractFieldsByContractId(4L).size(), 1);
-        assertNull(service.getContractById(3));
+        assertNotNull(service.getContractById(300));
+        assertEquals(2, contractRepository.findContractFieldsByContractId(300L).size());
+        assertEquals(1, contractRepository.findContractFieldsByContractId(400L).size());
+        service.deleteContract(300);
+        assertEquals(0, contractRepository.findContractFieldsByContractId(300L).size());
+        assertEquals(1, contractRepository.findContractFieldsByContractId(400L).size());
+        assertNull(service.getContractById(300));
     }
 
     @Test
     @DatabaseSetup("contractTest.xml")
     @DatabaseTearDown(value = "contractTest.xml", type = DatabaseOperation.DELETE_ALL)
     void shouldUpdateAttributeWithEmptyValue() {
-        ContractBaseData testObject = service.getContractById(4);
+        ContractBaseData testObject = service.getContractById(400L);
         testObject.setContractAttributes(getListOfContractFields());
         DynamicAttributeField field = testObject.getContractAttributes().get(0);
         field.setValue(null);
@@ -282,7 +283,7 @@ class ContractServiceTest extends ServiceIntegrationTestTemplate {
     @DatabaseSetup("contractTest.xml")
     @DatabaseTearDown(value = "contractTest.xml", type = DatabaseOperation.DELETE_ALL)
     void shouldSaveAttributeWithEmptyValue() {
-        ContractBaseData testObject = service.getContractById(4);
+        ContractBaseData testObject = service.getContractById(400L);
         testObject.setContractAttributes(getListOfContractFields());
         DynamicAttributeField field = new DynamicAttributeField("new-key", null);
         testObject.getContractAttributes().add(field);

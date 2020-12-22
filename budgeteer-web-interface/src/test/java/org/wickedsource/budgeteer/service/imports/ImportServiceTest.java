@@ -36,7 +36,7 @@ class ImportServiceTest extends ServiceTestTemplate {
     @Test
     void testDeleteImport() throws Exception {
         importService.deleteImport(1L);
-        verify(importRepository, times(1)).delete(1L);
+        verify(importRepository, times(1)).deleteById(1L);
         verify(workRecordRepository, times(1)).deleteByImport(1L);
     }
 

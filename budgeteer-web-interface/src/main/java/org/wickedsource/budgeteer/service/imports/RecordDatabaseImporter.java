@@ -48,7 +48,7 @@ public abstract class RecordDatabaseImporter {
     }
 
     public void init() {
-        project = projectRepository.findOne(projectId);
+        project = projectRepository.findById(projectId).orElse(null);
         budgetsByImportKey = getBudgetCache(projectId);
         personsByImportKey = getPersonCache(projectId);
 

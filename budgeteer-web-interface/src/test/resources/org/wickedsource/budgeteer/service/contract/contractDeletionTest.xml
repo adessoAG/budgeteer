@@ -1,48 +1,49 @@
 <dataset>
-    <PROJECT id="1" name="project1"/>
 
-    <CONTRACT id="3" CONTRACT_NAME="TestContract" PROJECT_ID="1" BUDGET="100" INTERNAL_NUMBER="Test" START_DATE="2015-01-01" CONTRACT_TYPE="1" TAXRATE="10"/>
-    <CONTRACT id="4" CONTRACT_NAME="TestContract1" PROJECT_ID="1" BUDGET="100" INTERNAL_NUMBER="Test" START_DATE="2015-01-01" CONTRACT_TYPE="1" TAXRATE="0"/>
+    <PROJECT id="100" name="project1"/>
+    <BUDGETEER_USER id="100" name="username" password="1234"/>
+
+    <CONTRACT id="300" CONTRACT_NAME="TestContract" PROJECT_ID="100" BUDGET="100" INTERNAL_NUMBER="Test" START_DATE="2015-01-01" CONTRACT_TYPE="1" TAXRATE="10"/>
+    <CONTRACT id="400" CONTRACT_NAME="TestContract1" PROJECT_ID="100" BUDGET="100" INTERNAL_NUMBER="Test" START_DATE="2015-01-01" CONTRACT_TYPE="1" TAXRATE="0"/>
 
     <!-- Add a budget to the contract -->
-        <BUDGET id="1" name="Budget 1" total="100000" import_key="budget1" project_id="1" CONTRACT_ID="3"/>
+    <BUDGET id="100" name="Budget 1" total="100000" import_key="budget1" project_id="100" CONTRACT_ID="300"/>
 
-        <!-- Add some work and plan records to the budget -->
+    <!-- Add some work and plan records to the budget -->
 
-            <PERSON id="1" name="person1" import_key="person1" project_id="1"/>
-            <PERSON id="2" name="person2" import_key="person2" project_id="1"/>
+    <PERSON id="100" name="person1" import_key="person1" project_id="100"/>
+    <PERSON id="200" name="person2" import_key="person2" project_id="100"/>
 
-            <IMPORT id="1" import_date="2015-01-01" start_date="2015-01-01" end_date="2015-01-01" import_type="Testimport" project_id="1"/>
+    <IMPORT id="100" import_date="2015-01-01" start_date="2015-01-01" end_date="2015-01-01" import_type="Testimport" project_id="100"/>
 
-            <WORK_RECORD id="1" person_id="1" budget_id="1" record_date="2015-01-01" record_year="2015" record_month="0" record_week="1" record_day="1" minutes="480" daily_rate="10000" import_id="1" edited_manually="false"/>
-            <WORK_RECORD id="2" person_id="1" budget_id="1" record_date="2015-01-02" record_year="2015" record_month="0" record_week="1" record_day="2" minutes="480" daily_rate="20000" import_id="1" edited_manually="false"/>
+    <WORK_RECORD id="100" person_id="100" budget_id="100" record_date="2015-01-01" record_year="2015" record_month="0" record_week="1" record_day="1" minutes="480" daily_rate="10000" import_id="100" edited_manually="false"/>
+    <WORK_RECORD id="200" person_id="100" budget_id="100" record_date="2015-01-02" record_year="2015" record_month="0" record_week="1" record_day="2" minutes="480" daily_rate="20000" import_id="100" edited_manually="false"/>
 
-            <PLAN_RECORD id="1" person_id="1" budget_id="1" record_date="2015-01-01" record_year="2015" record_month="0" record_week="1" record_day="1" minutes="480" daily_rate="10000" import_id="1"/>
-            <PLAN_RECORD id="2" person_id="2" budget_id="1" record_date="2015-01-02" record_year="2015" record_month="0" record_week="1" record_day="2" minutes="480" daily_rate="20000" import_id="1"/>
+    <PLAN_RECORD id="100" person_id="100" budget_id="100" record_date="2015-01-01" record_year="2015" record_month="0" record_week="1" record_day="1" minutes="480" daily_rate="10000" import_id="100"/>
+    <PLAN_RECORD id="200" person_id="200" budget_id="100" record_date="2015-01-02" record_year="2015" record_month="0" record_week="1" record_day="2" minutes="480" daily_rate="20000" import_id="100"/>
 
 
     <!-- Add additional fields and information to the contract -->
 
-    <PROJECT_CONTRACT_FIELD id="1" FIELD_NAME="test0" PROJECT_ID="1"/>
-    <PROJECT_CONTRACT_FIELD id="2" FIELD_NAME="test1" PROJECT_ID="1"/>
+    <PROJECT_CONTRACT_FIELD id="100" FIELD_NAME="test0" PROJECT_ID="100"/>
+    <PROJECT_CONTRACT_FIELD id="200" FIELD_NAME="test1" PROJECT_ID="100"/>
 
-    <CONTRACT_FIELD CONTRACT_ID="3" id="1"  PROJECT_CONTRACT_FIELD="1" CONTRACT_FIELD_VALUE="test0" />
-    <CONTRACT_FIELD CONTRACT_ID="3" id="2"  PROJECT_CONTRACT_FIELD="2" CONTRACT_FIELD_VALUE="test1" />
+    <CONTRACT_FIELD CONTRACT_ID="300" id="100"  PROJECT_CONTRACT_FIELD="100" CONTRACT_FIELD_VALUE="test0" />
+    <CONTRACT_FIELD CONTRACT_ID="300" id="200"  PROJECT_CONTRACT_FIELD="200" CONTRACT_FIELD_VALUE="test1" />
 
-    <CONTRACT_FIELD CONTRACT_ID="4" id="3"  PROJECT_CONTRACT_FIELD="2" CONTRACT_FIELD_VALUE="test1" />
+    <CONTRACT_FIELD CONTRACT_ID="400" id="300"  PROJECT_CONTRACT_FIELD="200" CONTRACT_FIELD_VALUE="test1" />
 
     <!-- Add come invoices to to contract -->
 
-    <CONTRACT_INVOICE_FIELD id="1" FIELD_NAME="Test Contract Field" CONTRACT_ID="3" />
-    <CONTRACT_INVOICE_FIELD id="2" FIELD_NAME="Test Contract Field 2" CONTRACT_ID="3" />
+    <CONTRACT_INVOICE_FIELD id="100" FIELD_NAME="Test Contract Field" CONTRACT_ID="300" />
+    <CONTRACT_INVOICE_FIELD id="200" FIELD_NAME="Test Contract Field 2" CONTRACT_ID="300" />
 
-    <INVOICE id="1" CONTRACT_ID="3" NAME="Test Invoice" INVOICE_SUM="2014" INTERNAL_NUMBER="ABC"  YEAR="2014" MONTH="2"/>
+    <INVOICE id="100" CONTRACT_ID="300" NAME="Test Invoice" INVOICE_SUM="2014" INTERNAL_NUMBER="ABC"  YEAR="2014" MONTH="2"/>
 
-    <INVOICE id="2" CONTRACT_ID="3" NAME="Test Invoice 1" INVOICE_SUM="2024" INTERNAL_NUMBER="ABC"  YEAR="2016" MONTH="2"/>
+    <INVOICE id="200" CONTRACT_ID="300" NAME="Test Invoice 1" INVOICE_SUM="2024" INTERNAL_NUMBER="ABC"  YEAR="2016" MONTH="2"/>
 
-    <INVOICE_FIELD id="1" INVOICE_ID="1" CONTRACT_INVOICE_FIELD_ID="1" INVOICE_FIELD_VALUE="Test" />
-    <INVOICE_FIELD id="2" INVOICE_ID="1" CONTRACT_INVOICE_FIELD_ID="2" INVOICE_FIELD_VALUE="Test" />
+    <INVOICE_FIELD id="100" INVOICE_ID="100" CONTRACT_INVOICE_FIELD_ID="100" INVOICE_FIELD_VALUE="Test" />
+    <INVOICE_FIELD id="200" INVOICE_ID="100" CONTRACT_INVOICE_FIELD_ID="200" INVOICE_FIELD_VALUE="Test" />
 
 
 </dataset>
-

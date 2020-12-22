@@ -78,10 +78,10 @@ public interface WorkRecordRepository extends CrudRepository<WorkRecordEntity, L
     @Query("delete from WorkRecordEntity r where r.budget.id in ( select b.id from BudgetEntity b where b.project.id = :projectId)")
     void deleteByProjectId(@Param("projectId") long projectId);
 
-    @Query("select new org.wickedsource.budgeteer.persistence.record.MissingDailyRateBean(r.person.id, r.person.name, min(r.date), max(r.date)) from WorkRecordEntity r where r.dailyRate = 0 and r.person.project.id = :projectId group by r.person.id, r.person.name")
+    @Query("select new org.wickedsource.budgeteer.persistence.record.MissingDailyRateBean(r.person.id, r.person.name, min(r.date), max(r.date)) from WorkRecordEntity r where r.dailyRate = org.wickedsource.budgeteer.MoneyUtil.ZERO and r.person.project.id = :projectId group by r.person.id, r.person.name")
     List<MissingDailyRateBean> getMissingDailyRatesForProject(@Param("projectId") long projectId);
 
-    @Query("select new org.wickedsource.budgeteer.persistence.record.MissingDailyRateForBudgetBean(r.person.id, r.person.name, min(r.date), max(r.date), b.name, b.id) from WorkRecordEntity r join r.budget b where r.dailyRate = 0 and r.person.id = :personId group by r.person.id, r.person.name, b.name, b.id")
+    @Query("select new org.wickedsource.budgeteer.persistence.record.MissingDailyRateForBudgetBean(r.person.id, r.person.name, min(r.date), max(r.date), b.name, b.id) from WorkRecordEntity r join r.budget b where r.dailyRate = org.wickedsource.budgeteer.MoneyUtil.ZERO and r.person.id = :personId group by r.person.id, r.person.name, b.name, b.id")
     List<MissingDailyRateForBudgetBean> getMissingDailyRatesForPerson(@Param("personId") long personId);
 
     @Override

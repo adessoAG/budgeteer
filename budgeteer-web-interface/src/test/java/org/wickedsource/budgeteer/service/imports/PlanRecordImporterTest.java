@@ -21,6 +21,7 @@ import org.wickedsource.budgeteer.persistence.project.ProjectRepository;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(loader = SpringockitoContextLoader.class, locations = {"classpath:spring-service.xml", "classpath:spring-repository-mock.xml"})
@@ -43,7 +44,7 @@ class PlanRecordImporterTest {
     @DatabaseSetup("doImportWithEmptyDatabase.xml")
     @DatabaseTearDown(value = "doImportWithEmptyDatabase.xml", type = DatabaseOperation.DELETE_ALL)
     void testGetSkippedRecordsNoSkippedRecords() throws Exception {
-        Mockito.when(projectRepository.findOne(Mockito.anyLong())).thenReturn(new ProjectEntity());
+        Mockito.when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(new ProjectEntity()));
         doImport();
         List<List<String>> skippedRecords = importService.getSkippedRecords();
         Assertions.assertEquals(0, skippedRecords.size());
@@ -57,7 +58,7 @@ class PlanRecordImporterTest {
         ProjectEntity project = new ProjectEntity();
         project.setProjectStart(formatter.parse("02.01.2014"));
         project.setProjectEnd(formatter.parse("12.01.2014"));
-        Mockito.when(projectRepository.findOne(Mockito.anyLong())).thenReturn(project);
+        Mockito.when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
         doImport();
         List<List<String>> skippedRecords = importService.getSkippedRecords();
         Assertions.assertEquals(75, skippedRecords.size());

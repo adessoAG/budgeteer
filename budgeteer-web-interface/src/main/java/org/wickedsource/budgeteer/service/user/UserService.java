@@ -72,14 +72,8 @@ public class UserService {
      */
     @PreAuthorize("canReadProject(#projectId)")
     public void removeUserFromProject(long projectId, long userId) {
-        ProjectEntity project = projectRepository.findOne(projectId);
-        if (project == null) {
-            throw new UnknownEntityException(ProjectEntity.class, projectId);
-        }
-        UserEntity user = userRepository.findOne(userId);
-        if (user == null) {
-            throw new UnknownEntityException(UserEntity.class, userId);
-        }
+        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(() -> new UnknownEntityException(ProjectEntity.class, projectId));
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UnknownEntityException(UserEntity.class, userId));
         user.getAuthorizedProjects().remove(project);
         project.getAuthorizedUsers().remove(user);
     }
@@ -92,14 +86,8 @@ public class UserService {
      */
     @PreAuthorize("canReadProject(#projectId)")
     public void addUserToProject(long projectId, long userId) {
-        ProjectEntity project = projectRepository.findOne(projectId);
-        if (project == null) {
-            throw new UnknownEntityException(ProjectEntity.class, projectId);
-        }
-        UserEntity user = userRepository.findOne(userId);
-        if (user == null) {
-            throw new UnknownEntityException(UserEntity.class, userId);
-        }
+        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(() -> new UnknownEntityException(ProjectEntity.class, projectId));
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UnknownEntityException(UserEntity.class, userId));
         user.getAuthorizedProjects().add(project);
         project.getAuthorizedUsers().add(user);
     }
@@ -180,7 +168,7 @@ public class UserService {
      * @return true if the password matches the user, false if not
      */
     public boolean checkPassword(long id, String password) {
-        UserEntity entity = userRepository.findOne(id);
+        UserEntity entity = userRepository.findById(id).orElseThrow(RuntimeException::new);
         return entity.getPassword().equals(passwordHasher.hash(password));
     }
 
@@ -210,11 +198,7 @@ public class UserService {
      * @return EditUserData for editing the user
      */
     public EditUserData loadUserToEdit(long id) {
-        UserEntity userEntity = userRepository.findOne(id);
-
-        if (userEntity == null)
-            throw new UnknownEntityException(UserEntity.class, id);
-
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new UnknownEntityException(UserEntity.class, id));
         EditUserData editUserData = new EditUserData();
         editUserData.setId(userEntity.getId());
         editUserData.setName(userEntity.getName());
@@ -252,9 +236,9 @@ public class UserService {
             if (testEntity.getId() != data.getId())
                 throw new MailAlreadyInUseException();
 
-        userEntity = userRepository.findOne(data.getId());
+        userEntity = userRepository.findById(data.getId()).orElseThrow(RuntimeException::new);
 
-        testEntity = userRepository.findOne(data.getId());
+        testEntity = userRepository.findById(data.getId()).orElse(null);
         if (testEntity != null)
             if (testEntity.getMail() == null)
                 userEntity.setMailVerified(false);
@@ -357,12 +341,7 @@ public class UserService {
      * @throws UserIdNotFoundException
      */
     public UserEntity getUserById(long id) throws UserIdNotFoundException {
-        UserEntity userEntity = userRepository.findOne(id);
-
-        if (userEntity == null)
-            throw new UserIdNotFoundException();
-        else
-            return userEntity;
+        return userRepository.findById(id).orElseThrow(UserIdNotFoundException::new);
     }
 
     /**

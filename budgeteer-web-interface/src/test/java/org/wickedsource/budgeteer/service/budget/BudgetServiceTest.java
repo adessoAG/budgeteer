@@ -54,7 +54,7 @@ class BudgetServiceTest extends ServiceTestTemplate {
 
     @Test
     void testLoadBudgetBaseData() {
-        when(budgetRepository.findOne(1L)).thenReturn(createBudgetEntity());
+        when(budgetRepository.findById(1L)).thenReturn(createBudgetEntityOptional());
         BudgetBaseData data = budgetService.loadBudgetBaseData(1L);
         Assertions.assertEquals(1L, data.getId());
         Assertions.assertEquals("Budget 123", data.getName());
@@ -75,7 +75,7 @@ class BudgetServiceTest extends ServiceTestTemplate {
     @Test
     void testLoadBudgetDetailData() {
         Date date = new Date();
-        when(budgetRepository.findOne(1L)).thenReturn(createBudgetEntity());
+        when(budgetRepository.findById(1L)).thenReturn(createBudgetEntityOptional());
         when(workRecordRepository.getLatestWorkRecordDate(1L)).thenReturn(date);
         when(workRecordRepository.getSpentBudget(1L)).thenReturn(100000.0);
         when(planRecordRepository.getPlannedBudget(1L)).thenReturn(200000.0);
@@ -103,11 +103,12 @@ class BudgetServiceTest extends ServiceTestTemplate {
 
     @Test
     void testLoadBudgetToEdit() {
-        BudgetEntity budget = createBudgetEntity();
-        when(budgetRepository.findOne(1L)).thenReturn(budget);
+        Optional<BudgetEntity> budgetOptional = createBudgetEntityOptional();
+        when(budgetRepository.findById(1L)).thenReturn(budgetOptional);
         EditBudgetData data = budgetService.loadBudgetToEdit(1L);
+        BudgetEntity budget = budgetOptional.get();
 
-        verify(budgetRepository, times(1)).findOne(1L);
+        verify(budgetRepository, times(1)).findById(1L);
         Assertions.assertEquals(budget.getTotal(), data.getTotal());
         Assertions.assertEquals(mapEntitiesToTags(budget.getTags()), data.getTags());
         Assertions.assertEquals(budget.getImportKey(), data.getImportKey());
@@ -121,13 +122,15 @@ class BudgetServiceTest extends ServiceTestTemplate {
 
     @Test
     void testSaveBudget() {
-        BudgetEntity budget = createBudgetEntity();
-        when(budgetRepository.findOne(1L)).thenReturn(budget);
+        Optional<BudgetEntity> budgetEntityOptional = createBudgetEntityOptional();
+        when(budgetRepository.findById(1L)).thenReturn(budgetEntityOptional);
+
 
         EditBudgetData data = getEditBudgetEntity();
 
         budgetService.saveBudget(data);
 
+        BudgetEntity budget = budgetEntityOptional.get();
         Assertions.assertEquals(1L, budget.getId());
         Assertions.assertEquals(data.getImportKey(), budget.getImportKey());
         Assertions.assertEquals(data.getTags(), mapEntitiesToTags(budget.getTags()));
@@ -140,11 +143,11 @@ class BudgetServiceTest extends ServiceTestTemplate {
 
     @Test
     void testSaveBudgetWithContract() {
-        BudgetEntity budget = createBudgetEntity();
-        when(budgetRepository.findOne(1L)).thenReturn(budget);
+        Optional<BudgetEntity> budgetEntityOptional = createBudgetEntityOptional();
+        when(budgetRepository.findById(1L)).thenReturn(budgetEntityOptional);
 
         ContractEntity contractEntity = createContract();
-        when(contractRepository.findOne(1L)).thenReturn(contractEntity);
+        when(contractRepository.findById(1L)).thenReturn(Optional.of(contractEntity));
 
         EditBudgetData data = new EditBudgetData();
         data.setId(1L);
@@ -154,6 +157,7 @@ class BudgetServiceTest extends ServiceTestTemplate {
 
         budgetService.saveBudget(data);
 
+        BudgetEntity budget = budgetEntityOptional.get();
         Assertions.assertEquals(1L, budget.getId());
         Assertions.assertEquals(1L, budget.getContract().getId());
     }
@@ -188,7 +192,7 @@ class BudgetServiceTest extends ServiceTestTemplate {
     void shouldThrowExceptionWhenConstraintIsViolated() {
         given(budgetRepository.save(Mockito.any(BudgetEntity.class)))
                 .willThrow(new DataIntegrityViolationException("constraint violation"));
-        when(budgetRepository.findOne(1L)).thenReturn(createBudgetEntity());
+        when(budgetRepository.findById(1L)).thenReturn(createBudgetEntityOptional());
 
         Assertions.assertThrows(DataIntegrityViolationException.class,
                 () -> budgetService.saveBudget(createBudgetEditEntity()),
@@ -208,6 +212,21 @@ class BudgetServiceTest extends ServiceTestTemplate {
         budget.setProject(project);
         budget.setImportKey("budget123");
         return budget;
+    }
+
+    private Optional<BudgetEntity> createBudgetEntityOptional() {
+        BudgetEntity budget = new BudgetEntity();
+        budget.setId(1L);
+        budget.setTotal(MoneyUtil.createMoneyFromCents(100000));
+        budget.setName("Budget 123");
+        budget.getTags().add(new BudgetTagEntity("Tag1"));
+        budget.getTags().add(new BudgetTagEntity("Tag2"));
+        budget.getTags().add(new BudgetTagEntity("Tag3"));
+        ProjectEntity project = new ProjectEntity();
+        project.setId(1);
+        budget.setProject(project);
+        budget.setImportKey("budget123");
+        return Optional.of(budget);
     }
 
     private EditBudgetData createBudgetEditEntity() {

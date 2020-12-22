@@ -66,14 +66,14 @@ class PersonServiceIntegrationTest extends IntegrationTestTemplate {
         person.getRates().add(rate2);
         service.savePersonWithRates(person);
 
-        PersonEntity personEntity = personRepository.findOne(1L);
+        PersonEntity personEntity = personRepository.findById(1L).orElseThrow(RuntimeException::new);
         Assertions.assertEquals(2, personEntity.getDailyRates().size());
 
-        WorkRecordEntity record = workRecordRepository.findOne(1L);
+        WorkRecordEntity record = workRecordRepository.findById(1L).orElseThrow(RuntimeException::new);
         Assertions.assertEquals(MoneyUtil.createMoneyFromCents(32100L), record.getDailyRate());
-        record = workRecordRepository.findOne(2L);
+        record = workRecordRepository.findById(2L).orElseThrow(RuntimeException::new);
         Assertions.assertEquals(MoneyUtil.createMoneyFromCents(12300L), record.getDailyRate());
-        record = workRecordRepository.findOne(3L);
+        record = workRecordRepository.findById(3L).orElseThrow(RuntimeException::new);
         Assertions.assertEquals(MoneyUtil.createMoneyFromCents(32100L), record.getDailyRate());
     }
 

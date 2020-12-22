@@ -30,7 +30,7 @@ class TemplateRepositoryTest extends IntegrationTestTemplate {
     void deleteTemplateTest() {
         List<TemplateEntity> templatesInProject = templateRepository.findByProjectId(1L);
         Assertions.assertEquals(1, templatesInProject.size());
-        templateRepository.delete(templatesInProject.get(0).getId());
+        templateRepository.deleteById(templatesInProject.get(0).getId());
         Assertions.assertEquals(0, templateRepository.findByProjectId(1L).size());
     }
 

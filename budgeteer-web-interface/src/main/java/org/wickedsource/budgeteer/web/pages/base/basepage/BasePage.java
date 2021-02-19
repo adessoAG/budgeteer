@@ -26,10 +26,6 @@ import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
 import org.wickedsource.budgeteer.web.pages.user.edit.EditUserPage;
 import org.wickedsource.budgeteer.web.pages.user.login.LoginPage;
 import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectPage;
-import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectWithKeycloakPage;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 
 @NeedsLogin
 @NeedsProject

@@ -10,7 +10,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
 import org.wickedsource.budgeteer.web.BudgeteerSettings;
 import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectPage;
-import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectWithKeycloakPage;
 
 /**
  * {@link IComponentInstantiationListener} and {@link IComponentOnBeforeRenderListener} implementation
@@ -42,8 +41,8 @@ public class BudgeteerRequiresProjectListener implements IComponentOnBeforeRende
     }
 
     /**
-     * Redirects the user to the {@link SelectProjectPage} (or {@link SelectProjectWithKeycloakPage} respectively
-     * when using keycloak) when the component requires a project but it is not set.
+     * Redirects the user to the {@link SelectProjectPage} when the component requires a project but
+     * it is not set.
      *
      * @param component
      *          The component to check.

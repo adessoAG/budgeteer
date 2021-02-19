@@ -113,18 +113,6 @@ public class UserService {
     }
 
     /**
-     * Login without password if using Keycloak
-     */
-    public User login(String username) {
-        UserEntity userEntity = userRepository.findByName(username);
-        if (userEntity == null) {
-            registerUser(username);
-            userEntity = userRepository.findByName(username);
-        }
-        return mapper.map(userEntity);
-    }
-
-    /**
      * Registers a new user to the Budgeteer application.
      * If the chosen username is already in-use, an UsernameAlreadyInUseException is thrown.
      * If the chosen mail address is already in-use, a MailAlreadyInUseException is thrown.
@@ -148,16 +136,6 @@ public class UserService {
             if (!mail.equals("") && Boolean.valueOf(mailActivated))
                 applicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
         }
-    }
-
-    /**
-     * Register user without password if using Keycloak
-     */
-    private void registerUser(String username) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setName(username);
-        userEntity.setPassword("password"); // dummy password
-        userRepository.save(userEntity);
     }
 
     /**

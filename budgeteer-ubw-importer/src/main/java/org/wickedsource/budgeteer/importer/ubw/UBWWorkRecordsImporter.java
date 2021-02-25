@@ -1,7 +1,8 @@
 package org.wickedsource.budgeteer.importer.ubw;
 
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.wickedsource.budgeteer.imports.api.*;
 
 import java.io.File;
@@ -9,70 +10,45 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 public class UBWWorkRecordsImporter implements WorkRecordsImporter {
 
-    private int sheetIndex = -1;
-
-    private int columnInvoiceable = 11;
-
-    private int columnDate = 3;
-
-    private int columnPerson = 2;
-
-    private int columnBudget = 8;
-
-    private int columnHours = 10;
-
-    private List<List<String>> skippedRecords = new LinkedList<>();
+    private static final int CONTENT_ROW_INDEX = 3;
+    private List<List<String>> skippedRecords = new ArrayList<>();
 
     @Override
     public List<ImportedWorkRecord> importFile(ImportFile file) throws ImportException, InvalidFileFormatException {
         try {
-            skippedRecords.add(new LinkedList<>());
+            skippedRecords.add(new ArrayList<>());
             //Adds the name of the imported file at the beginning of the list of skipped data sets..
-            List<String> fileName = new LinkedList<>();
+            List<String> fileName = new ArrayList<>();
             fileName.add(file.getFilename());
             skippedRecords.add(fileName);
 
             List<ImportedWorkRecord> resultList = new ArrayList<>();
             Workbook workbook = new XSSFWorkbook(file.getInputStream());
-            if (!checkValidityAndSetSheetAndColumnIndices(workbook)) {
-                throw new InvalidFileFormatException("Invalid file", file.getFilename());
-            }
-            Sheet sheet = workbook.getSheetAt(sheetIndex);
-            int i = 3;
-            Row row = sheet.getRow(i);
-            while (row != null && row.getCell(0) != null && row.getCell(0).getStringCellValue() != null) {
-                if (isImportable(row)) {
-                    ImportedWorkRecord record = parseRow(row, file);
-                    resultList.add(record);
-                } else {
-                    if (!isCompletelyEmpty(row)) {
-                        skippedRecords.add(getRowAsStrings(row, i));
-                    }
-                }
-                i++;
-                row = sheet.getRow(i);
-            }
+            TableInfo tableInfo = findTableInfoForValidSheet(workbook).orElseThrow(() -> new InvalidFileFormatException("Invalid file", file.getFilename()));
+            Sheet sheet = tableInfo.getSheet();
+
+            StreamSupport.stream(sheet.spliterator(), false)
+                    .skip(CONTENT_ROW_INDEX)
+                    .filter(row -> row != null && row.getCell(0) != null && row.getCell(0).getStringCellValue() != null)
+                    .forEach(row -> {
+                        if (isImportable(row, tableInfo)) {
+                            ImportedWorkRecord record = parseRow(row, tableInfo, file);
+                            resultList.add(record);
+                        } else {
+                            if (!isCompletelyEmpty(row)) {
+                                skippedRecords.add(getRowAsStrings(row));
+                            }
+                        }
+                    });
+
             return resultList;
         } catch (IOException e) {
             throw new ImportException(e);
         }
-    }
-
-    private boolean isCompletelyEmpty(Row row) {
-        for (short i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
-            Cell cell = row.getCell(i);
-            if (!isBlank(cell.toString())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean isBlank(String s) {
-        return s == null || s.trim().isEmpty();
     }
 
     @Override
@@ -96,12 +72,8 @@ public class UBWWorkRecordsImporter implements WorkRecordsImporter {
             Calendar maxCalendar = Calendar.getInstance();
             Calendar maxineCalendar = Calendar.getInstance();
             XSSFWorkbook workbook = new XSSFWorkbook(getClass().getResourceAsStream("/example_ubw_report.xlsx"));
-            checkValidityAndSetSheetAndColumnIndices(workbook);
-            XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
-            XSSFRow row;
-            XSSFCell cell;
-            int col = 3;
-            int i = sheet.getLastRowNum();
+            TableInfo tableInfo = findTableInfoForValidSheet(workbook).orElseThrow(RuntimeException::new);
+            Sheet sheet = tableInfo.getSheet();
 
             XSSFCellStyle style = workbook.createCellStyle();
             style.setBorderBottom(BorderStyle.THIN);
@@ -113,42 +85,22 @@ public class UBWWorkRecordsImporter implements WorkRecordsImporter {
             maxCalendar.setTime(date);
             maxineCalendar.setTime(date);
 
-            while (i != 0) {
-                row = sheet.getRow(i);
-
-                if (row.getCell(col - 1).getStringCellValue().equals("Mustermann, Max")) {
-                    if (maxCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-                        maxCalendar.add(Calendar.DATE, -1);
-                    } else if (maxCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-                        maxCalendar.add(Calendar.DATE, -2);
-                    }
-                    cell = row.createCell(3);
-                    cell.setCellValue(maxCalendar.getTime());
-                    cell.setCellStyle(style);
-                    maxCalendar.add(Calendar.DATE, -1);
-                } else if (row.getCell(col - 1).getStringCellValue().equals("Mustermann, Maxine")) {
-                    if (maxineCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-                        maxineCalendar.add(Calendar.DATE, -1);
-                    } else if (maxineCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-                        maxineCalendar.add(Calendar.DATE, -2);
-                    }
-                    cell = row.createCell(3);
-                    cell.setCellValue(maxineCalendar.getTime());
-                    cell.setCellStyle(style);
-                    maxineCalendar.add(Calendar.DATE, -1);
+            for (int i = tableInfo.getSheet().getLastRowNum(); i != 0; i--) {
+                Row row = sheet.getRow(i);
+                Cell cell = row.getCell(CONTENT_ROW_INDEX - 1);
+                if (cell.getStringCellValue().equals("Mustermann, Max")) {
+                    createCell(maxCalendar, row, style);
+                } else if (cell.getStringCellValue().equals("Mustermann, Maxine")) {
+                    createCell(maxineCalendar, row, style);
                 }
-                i--;
             }
 
             File tmp = File.createTempFile("example_ubw_report", ".xlsx");
-            FileOutputStream fileOutputStream = new FileOutputStream(tmp);
-            workbook.write(fileOutputStream);
-            fileOutputStream.flush();
-            fileOutputStream.close();
-
+            try (FileOutputStream fileOutputStream = new FileOutputStream(tmp)) {
+                workbook.write(fileOutputStream);
+            }
             file.setInputStream(new FileInputStream(tmp));
         } catch (IOException e) {
-            e.printStackTrace();
             file.setInputStream(getClass().getResourceAsStream("/example_ubw_report.xlsx"));
         }
         return file;
@@ -158,46 +110,20 @@ public class UBWWorkRecordsImporter implements WorkRecordsImporter {
     public List<List<String>> getSkippedRecords() {
         //if just an empty row at the beginning and the filename is in the List of skipped records, return an empty List
         if (skippedRecords != null && skippedRecords.size() == 2) {
-            skippedRecords = new LinkedList<>();
+            skippedRecords = new ArrayList<>();
         }
         return skippedRecords;
     }
 
-    boolean checkValidityAndSetSheetAndColumnIndices(Workbook workbook) {
-        boolean isValid = false;
-        for(int i = 0; i < workbook.getNumberOfSheets() && !isValid; i++){
-            Sheet sheet = workbook.getSheetAt(i);
-            int headerRowIndex = 2;
-            if (sheet.getRow(headerRowIndex) == null) {
-                isValid = false;
-            } else {
-                Row r = sheet.getRow(headerRowIndex);
-                try {
-                    if(r.getCell(5).getStringCellValue().equals("AA-Nr")){
-                        columnBudget = 9;
-                        columnHours = 11;
-                        columnInvoiceable = 12;
-                    } else {
-                        columnBudget = 8;
-                        columnHours = 10;
-                        columnInvoiceable = 11;
-                    }
-                    isValid = r.getCell(columnPerson).getStringCellValue().equals("Name") &&
-                            r.getCell(columnDate).getStringCellValue().equals("Tag") &&
-                            r.getCell(columnBudget).getStringCellValue().equals("Subgruppe") &&
-                            r.getCell(columnHours).getStringCellValue().equals("Aufwand [h]") &&
-                            r.getCell(columnInvoiceable).getStringCellValue().equals("KV");
-                    sheetIndex = i;
-                } catch (Exception e) {
-                    isValid = false;
-                }
-            }
-        }
-        return isValid;
+    Optional<TableInfo> findTableInfoForValidSheet(Workbook workbook) {
+        return StreamSupport.stream(workbook.spliterator(), false)
+                .map(TableInfo::new)
+                .filter(TableInfo::isValid)
+                .findFirst();
     }
 
-    private List<String> getRowAsStrings(Row row, int index) {
-        List<String> result = new LinkedList<>();
+    private List<String> getRowAsStrings(Row row) {
+        List<String> result = new ArrayList<>();
         for (short i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
             Cell cell = row.getCell(i);
             if (cell == null) {
@@ -207,17 +133,17 @@ public class UBWWorkRecordsImporter implements WorkRecordsImporter {
             result.add(cell.toString());
         }
         result.add("");
-        result.add("Line: " + index);
+        result.add("Line: " + row.getRowNum());
         result.add("Record is not importable");
         return result;
     }
 
-    private ImportedWorkRecord parseRow(Row row, ImportFile file) throws ImportException {
+    private ImportedWorkRecord parseRow(Row row, TableInfo tableInfo, ImportFile file) throws ImportException {
         try {
-            String personName = row.getCell(columnPerson).getStringCellValue();
-            Date date = row.getCell(columnDate).getDateCellValue();
-            String budgetName = row.getCell(columnBudget).getStringCellValue();
-            double hours = row.getCell(columnHours).getNumericCellValue();
+            String personName = row.getCell(tableInfo.getColumnPerson()).getStringCellValue();
+            Date date = row.getCell(tableInfo.getColumnDate()).getDateCellValue();
+            String budgetName = row.getCell(tableInfo.getColumnBudget()).getStringCellValue();
+            double hours = row.getCell(tableInfo.getColumnHours()).getNumericCellValue();
 
             ImportedWorkRecord record = new ImportedWorkRecord();
             record.setDate(date);
@@ -226,7 +152,7 @@ public class UBWWorkRecordsImporter implements WorkRecordsImporter {
             record.setMinutesWorked((int) Math.round(hours * 60));
 
             if (record.getDate() == null) {
-                throw new ImportException(String.format("Missing date in row %d and column %d of file %s", row.getRowNum() + 1, columnDate + 1, file.getFilename()));
+                throw new ImportException(String.format("Missing date in row %d and column %d of file %s", row.getRowNum() + 1, tableInfo.getColumnDate() + 1, file.getFilename()));
             }
 
             return record;
@@ -237,11 +163,37 @@ public class UBWWorkRecordsImporter implements WorkRecordsImporter {
         }
     }
 
-    private boolean isImportable(Row row) {
-        return row != null && ("ja".equalsIgnoreCase(row.getCell(columnInvoiceable).getStringCellValue()))
-                && (row.getCell(columnBudget).getStringCellValue() != null)
-                && (!"".equals(row.getCell(columnBudget).getStringCellValue().trim()))
-                && (row.getCell(columnPerson).getStringCellValue() != null)
-                && (!"".equals(row.getCell(columnPerson).getStringCellValue().trim()));
+    private void createCell(Calendar calendar, Row row, CellStyle style) {
+        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+            calendar.add(Calendar.DATE, -1);
+        } else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+            calendar.add(Calendar.DATE, -2);
+        }
+
+        Cell cell = row.createCell(3);
+        cell.setCellValue(calendar.getTime());
+        cell.setCellStyle(style);
+        calendar.add(Calendar.DATE, -1);
+    }
+
+    private boolean isImportable(Row row, TableInfo tableInfo) {
+        return row != null && ("ja".equalsIgnoreCase(row.getCell(tableInfo.getColumnInvoiceable()).getStringCellValue()))
+                && (!isBlank(row.getCell(tableInfo.getColumnBudget()).getStringCellValue()))
+                && (!isBlank(row.getCell(tableInfo.getColumnPerson()).getStringCellValue()));
+    }
+
+
+    private boolean isCompletelyEmpty(Row row) {
+        for (short i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
+            Cell cell = row.getCell(i);
+            if (!isBlank(cell.toString())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
     }
 }

@@ -80,7 +80,7 @@ class UBWWorkRecordsImporterTest {
     void testValidity() throws IOException {
         UBWWorkRecordsImporter importer = new UBWWorkRecordsImporter();
         Workbook workbook = new XSSFWorkbook(importer.getExampleFile().getInputStream());
-        assertTrue(importer.checkValidityAndSetSheetAndColumnIndices(workbook));
+        assertTrue(importer.findTableInfoForValidSheet(workbook).isPresent());
     }
 
     @Test

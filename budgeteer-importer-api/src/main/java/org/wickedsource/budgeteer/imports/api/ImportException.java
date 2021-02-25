@@ -1,6 +1,6 @@
 package org.wickedsource.budgeteer.imports.api;
 
-public class ImportException extends Exception {
+public class ImportException extends RuntimeException {
 
     public ImportException(String message) {
         super(message);

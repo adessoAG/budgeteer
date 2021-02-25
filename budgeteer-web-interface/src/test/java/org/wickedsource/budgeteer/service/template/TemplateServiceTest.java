@@ -70,7 +70,7 @@ class TemplateServiceTest extends ServiceTestTemplate {
         try {
             XSSFWorkbook testWorkbok = (XSSFWorkbook)WorkbookFactory.create(templateService.getExampleFile(ReportType.CONTRACT_REPORT).getInputStream());
             Assertions.assertNotNull(testWorkbok);
-        }catch (IOException | InvalidFormatException e){
+        }catch (IOException e){
             e.printStackTrace();
             Assertions.fail();
         }

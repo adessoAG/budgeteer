@@ -109,7 +109,7 @@ public class TemplateEntity implements Serializable {
         if(wbArr != null) {
             try {
                 return (XSSFWorkbook) WorkbookFactory.create(new ByteArrayInputStream(wbArr));
-            } catch (IOException | InvalidFormatException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

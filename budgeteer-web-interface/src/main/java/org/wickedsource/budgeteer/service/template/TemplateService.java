@@ -132,7 +132,7 @@ public class TemplateService {
                         temModel.getObject().isDefault(),
                         projectId);
                 templateRepository.save(temp);
-            } catch (IOException | InvalidFormatException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }else{
@@ -162,7 +162,7 @@ public class TemplateService {
                     projectId);
             resolveDefaults(temp.getId(), temModel);
             templateRepository.save(temp);
-        } catch (IOException | InvalidFormatException e){
+        } catch (IOException e){
             e.printStackTrace();
         }
     }

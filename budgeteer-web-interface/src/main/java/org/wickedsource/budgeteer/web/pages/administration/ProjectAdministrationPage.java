@@ -48,7 +48,7 @@ public class ProjectAdministrationPage extends BasePage {
 
     public ProjectAdministrationPage() {
         add(new CustomFeedbackPanel("feedback"));
-        add(createUserList("userList", new UsersInProjectModel(BudgeteerSession.get().getProjectId())));
+        add(createUserList("userList", () -> userService.getUsersInProject(BudgeteerSession.get().getProjectId())));
         add(createDeleteProjectButton("deleteProjectButton"));
         add(createAddUserForm("addUserForm"));
         add(createEditProjectForm("projectChangeForm"));
@@ -124,7 +124,9 @@ public class ProjectAdministrationPage extends BasePage {
             }
         };
 
-        DropDownChoice<User> userChoice = new DropDownChoice<>("userChoice", form.getModel(), new UsersNotInProjectModel(BudgeteerSession.get().getProjectId()), new UserChoiceRenderer());
+        DropDownChoice<User> userChoice = new DropDownChoice<>("userChoice", form.getModel(),
+                () -> userService.getUsersNotInProject(BudgeteerSession.get().getProjectId()),
+                new UserChoiceRenderer());
         userChoice.setRequired(true);
         form.add(userChoice);
         return form;

@@ -8,7 +8,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.wickedsource.budgeteer.service.budget.BudgetTagFilter;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
@@ -41,16 +40,7 @@ public class BudgetTagFilterPanel extends Panel {
                     }
                 };
 
-                button.add(new AttributeAppender("class", new AbstractReadOnlyModel<String>() {
-                    @Override
-                    public String getObject() {
-                        if (getFilter().isTagSelected(item.getModelObject())) {
-                            return " bg-light-blue";
-                        } else {
-                            return " bg-light-gray";
-                        }
-                    }
-                }));
+                button.add(new AttributeAppender("class", () -> getFilter().isTagSelected(item.getModelObject()) ? " bg-light-blue" : " bg-light-gray"));
 
                 Label buttonLabel = new Label("buttonLabel", item.getModelObject());
                 buttonLabel.setRenderBodyOnly(true);

@@ -1,5 +1,7 @@
 package org.wickedsource.budgeteer.web.pages.imports.fileimport;
 
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -21,7 +23,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
-import org.apache.wicket.util.time.Duration;
+import org.wickedsource.budgeteer.ListUtil;
 import org.wickedsource.budgeteer.importer.aproda.AprodaWorkRecordsImporter;
 import org.wickedsource.budgeteer.importer.ubw.UBWWorkRecordsImporter;
 import org.wickedsource.budgeteer.imports.api.*;
@@ -33,13 +35,16 @@ import org.wickedsource.budgeteer.web.components.customFeedback.CustomFeedbackPa
 import org.wickedsource.budgeteer.web.pages.base.dialogpage.DialogPageWithBacklink;
 import org.wickedsource.budgeteer.web.pages.imports.ImportsOverviewPage;
 import org.wickedsource.budgeteer.web.pages.person.overview.PeopleOverviewPage;
+import org.wicketstuff.lazymodel.LazyModel;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 @Mount("import/importFiles")
 public class ImportFilesPage extends DialogPageWithBacklink {
@@ -133,9 +138,9 @@ public class ImportFilesPage extends DialogPageWithBacklink {
                 return ImportReportGenerator.generateReport(skippedImports);
             }
         };
-        DownloadLink downloadButton = new DownloadLink("downloadButton", fileModel, "Not imported records.xlsx");
-        downloadButton = downloadButton.setCacheDuration(Duration.NONE);
-        downloadButton = downloadButton.setDeleteAfterDownload(true);
+        DownloadLink downloadButton = new DownloadLink("downloadButton", fileModel, "Not imported records.xlsx")
+                .setCacheDuration(Duration.ZERO)
+                .setDeleteAfterDownload(true);
         importFeedback.add(downloadButton);
         form.add(importFeedback);
         add(form);
@@ -143,11 +148,11 @@ public class ImportFilesPage extends DialogPageWithBacklink {
         feedback.setOutputMarkupId(true);
         form.add(feedback);
 
-        ImportersListModel importersListModel = new ImportersListModel();
-        DropDownChoice<Importer> importerChoice = new DropDownChoice<>("importerChoice", new PropertyModel<>(this, "importer"), importersListModel, new ImporterChoiceRenderer());
+        var importers =  service.getAvailableImporters();
+        DropDownChoice<Importer> importerChoice = new DropDownChoice<>("importerChoice", new PropertyModel<>(this, "importer"), importers, new ImporterChoiceRenderer());
 
         // Set the UBWWorkRecordsImporter as Default if available
-        for (Importer importer : importersListModel.getObject()) {
+        for (Importer importer : importers) {
             if (importer.getClass() == UBWWorkRecordsImporter.class) {
                 importerChoice.setDefaultModelObject(importer);
             }
@@ -164,7 +169,9 @@ public class ImportFilesPage extends DialogPageWithBacklink {
 
         FileUploadField fileUpload = new FileUploadField("fileUpload", new PropertyModel<List<FileUpload>>(this, "fileUploads"));
         fileUpload.setRequired(true);
-        fileUpload.add(new AttributeModifier("accept", new AcceptedFileExtensionsModel(importer)));
+        List<String> supportedExtensions = new ArrayList<>(importer.getSupportedFileExtensions());
+        supportedExtensions.add(".zip");
+        fileUpload.add(new AttributeModifier("accept", () -> StringUtils.join(supportedExtensions, ",")));
         fileUpload.add(new AjaxEventBehavior("change") {
             @Override
             protected void onEvent(AjaxRequestTarget target) {

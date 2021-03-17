@@ -1,16 +1,15 @@
 package org.wickedsource.budgeteer.web.components.tax;
 
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
 
-public class TaxLabelModel extends AbstractReadOnlyModel<String> {
+public class TaxLabelModel implements IModel<String> {
 
-    private String NET_FORMAT = "%s (net)";
-    private String GROSS_FORMAT = "%s (gross)";
+    private static final String NET_FORMAT = "%s (net)";
+    private static final String GROSS_FORMAT = "%s (gross)";
 
-    private IModel<String> model;
+    private final IModel<String> model;
 
     public TaxLabelModel(String value) {
         this.model = Model.of(value);

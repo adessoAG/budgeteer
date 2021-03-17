@@ -1,14 +1,13 @@
 package org.wickedsource.budgeteer.web.components.tax;
 
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.joda.money.Money;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
 
-public class TaxBudgetUnitMoneyModel extends AbstractReadOnlyModel<Money> {
+public class TaxBudgetUnitMoneyModel implements IModel<Money> {
 
-    private IModel<Money> netModel;
-    private IModel<Money> grossModel;
+    private final IModel<Money> netModel;
+    private final IModel<Money> grossModel;
 
     public TaxBudgetUnitMoneyModel(IModel<Money> netModel, IModel<Money> grossModel) {
         this.netModel = netModel;

@@ -99,7 +99,9 @@ public class SelectProjectPage extends DialogPageWithBacklink {
         };
         final Form<ProjectBaseData> form = new Form<>("chooseProjectForm", defaultProjectModel);
         form.setOutputMarkupId(true);
-        DropDownChoice<ProjectBaseData> choice = new DropDownChoice<>("projectChoice", form.getModel(), new ProjectsForUserModel(BudgeteerSession.get().getLoggedInUser().getId()), new ProjectChoiceRenderer());
+        DropDownChoice<ProjectBaseData> choice = new DropDownChoice<>("projectChoice", form.getModel(),
+                () -> projectService.getProjectsForUser(BudgeteerSession.get().getLoggedInUser().getId()),
+                new ProjectChoiceRenderer());
         choice.setRequired(true);
         choice.add(new OnChangeAjaxBehavior() {
             @Override

@@ -46,6 +46,8 @@ public class BudgeteerApplication extends WebApplication implements ApplicationC
     public void init() {
         super.init();
 
+        getCspSettings().blocking().disabled();
+
         getMarkupSettings().setStripWicketTags(true);
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, context));
         initWickedCharts();
@@ -54,7 +56,7 @@ public class BudgeteerApplication extends WebApplication implements ApplicationC
 
         getSecuritySettings().setAuthorizationStrategy(new BudgeteerAuthorizationStrategy());
         getSecuritySettings().setUnauthorizedComponentInstantiationListener(new BudgeteerUnauthorizedComponentInstantiationListener());
-        setHeaderResponseDecorator(response -> new ResourceAggregator(new JavaScriptFilteredIntoFooterHeaderResponse(response, "JavaScriptContainer")));
+        getHeaderResponseDecorators().add(response -> new JavaScriptFilteredIntoFooterHeaderResponse(response, "JavaScriptContainer"));
 
         // add component instantiation/onBeforeRender listener
         final BudgeteerRequiresProjectListener listener = new BudgeteerRequiresProjectListener();

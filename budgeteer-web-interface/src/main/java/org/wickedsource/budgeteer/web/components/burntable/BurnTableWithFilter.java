@@ -3,7 +3,6 @@ package org.wickedsource.budgeteer.web.components.burntable;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.link.DownloadLink;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.wickedsource.budgeteer.service.exports.ExportService;
@@ -38,12 +37,7 @@ public class BurnTableWithFilter extends Panel {
         burnTable = new BurnTable("table", tableModel, dailyRateIsEditable);
         add(burnTable);
 
-        IModel<File> fileModel = new AbstractReadOnlyModel<File>() {
-            @Override
-            public File getObject() {
-                return exportService.generateCSVFileFromRecords(burnTable.getRows());
-            }
-        };
+        IModel<File> fileModel = () -> exportService.generateCSVFileFromRecords(burnTable.getRows());
 
         DownloadLink downloadlink = new DownloadLink("export", fileModel);
         downloadlink.setDeleteAfterDownload(true);

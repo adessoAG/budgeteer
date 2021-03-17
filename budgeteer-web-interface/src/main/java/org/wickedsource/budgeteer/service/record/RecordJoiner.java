@@ -132,7 +132,7 @@ public class RecordJoiner {
         public AggregatedRecord getOrCreateRecord(WeeklyAggregatedRecordBean recordBean) {
             AggregatedRecord record = get(getKey(recordBean));
             if (record == null) {
-                Calendar c = Calendar.getInstance(Locale.GERMAN);
+                Calendar c = Calendar.getInstance(Locale.GERMANY);
                 c.clear();
                 c.set(Calendar.YEAR, recordBean.getYear());
                 c.set(Calendar.WEEK_OF_YEAR, recordBean.getWeek());
@@ -149,7 +149,7 @@ public class RecordJoiner {
         public AggregatedRecord getOrCreateRecord(MonthlyAggregatedRecordBean recordBean) {
             AggregatedRecord record = get(getKey(recordBean));
             if (record == null) {
-                Calendar c = Calendar.getInstance(Locale.GERMAN);
+                Calendar c = Calendar.getInstance(Locale.GERMANY);
                 c.clear();
                 c.set(Calendar.YEAR, recordBean.getYear());
                 c.set(Calendar.MONTH, recordBean.getMonth());

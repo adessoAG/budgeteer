@@ -1,48 +1,39 @@
 package org.wickedsource.budgeteer;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CSVUtils {
 
+    private CSVUtils() {}
+
     private static final char DEFAULT_SEPARATOR = ';';
 
-    public static void writeLine(Writer w, List<String> values) throws IOException {
-        writeLine(w, values, DEFAULT_SEPARATOR);
+    public static void writeLine(Writer writer, List<String> values) throws IOException {
+        writeLine(writer, values, DEFAULT_SEPARATOR);
     }
 
-    public static void writeLine(Writer w, List<String> values, char separators) throws IOException {
-        boolean first = true;
-
-        if (separators == ' ') {
+    public static void writeLine(Writer writer, List<String> values, char separators) throws IOException {
+        if (Character.isSpaceChar(separators)) {
             separators = DEFAULT_SEPARATOR;
         }
-
-        StringBuilder sb = new StringBuilder();
-        for (String value : values) {
-            if (!first) {
-                sb.append(separators);
-            }
-            if (value == null) {
-                sb.append(followCVSformat(""));
-            } else {
-                sb.append(followCVSformat(value));
-            }
-            first = false;
-        }
-        sb.append("\n");
-        w.append(sb.toString());
+        String csv = values.stream().map(CSVUtils::followCVSformat)
+                .collect(Collectors.joining(Character.toString(separators), "", "\n"));
+        writer.append(csv);
     }
 
     //https://tools.ietf.org/html/rfc4180
     private static String followCVSformat(String value) {
-
-        String result = value;
-        if (result.contains("\"")) {
-            result = result.replace("\"", "\"\"");
+        if (value == null) {
+            return "";
         }
-        return result;
-
+        if (StringUtils.containsAny(value, ",", "\"", "\r\n")) {
+            return String.format("\"%s\"", value.replace("\"", "\"\""));
+        }
+        return value;
     }
 }

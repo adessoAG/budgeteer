@@ -1,59 +1,61 @@
 <wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
-    <div  wicket:id="tableComponents" >
-        <div wicket:id="feedback"></div>
-        <p class="pull-right">Total burned budget with current filter: <strong wicket:id="total">€120.000</strong></p><br/>
+  <div wicket:id="tableComponents">
+    <div wicket:id="feedback"></div>
+    <p class="pull-right">
+      Total burned budget with current filter: <strong wicket:id="total">€120.000</strong><br>
+      Burned budget with current filter on selected page: <strong wicket:id="spentCurrentPage">€120.000</strong>
+    </p>
+    <br/>
+    <table id="hoursTable" class="table table-bordered table-hover" wicket:id="table">
+      <thead>
+      <tr>
+        <th scope="col">Budget</th>
+        <th scope="col">Name</th>
+        <th scope="col">Daily Rate</th>
+        <th scope="col">Date</th>
+        <th scope="col">Hours</th>
+        <th scope="col">Budget Burned</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr wicket:id="recordList">
+        <td wicket:id="budget">Project Management</td>
+        <td wicket:id="person">Tom Hombergs</td>
+        <td wicket:id="dailyRate">790</td>
+        <td wicket:id="date">25.09.2014</td>
+        <td wicket:id="hours">8.00</td>
+        <td wicket:id="burnedBudget">790</td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr>
+        <th scope="col">Budget</th>
+        <th scope="col">Name</th>
+        <th scope="col">Daily Rate</th>
+        <th scope="col">Date</th>
+        <th scope="col">Hours</th>
+        <th scope="col">Budget Burned</th>
+      </tr>
+      </tfoot>
+    </table>
+    <label wicket:id="pageLabel">label</label>
+    <form wicket:id="itemsPerPageForm">
+      <label for="itemsPerPage">Records per page</label>
+      <input id="itemsPerPage" type="number" wicket:id="itemsPerPage">
+    </form>
 
-        <table id="hoursTable" class="table table-bordered table-hover" wicket:id="table">
-            <thead>
-            <tr>
-                <th>Budget</th>
-                <th>Name</th>
-                <th>Daily Rate</th>
-                <th>Date</th>
-                <th>Hours</th>
-                <th>Budget Burned</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr wicket:id="recordList">
-                <td wicket:id="budget">Project Management</td>
-                <td wicket:id="person">Tom Hombergs</td>
-                <td><span wicket:id="dailyRate">790</span><span wicket:id="edited" class="fa fa-fw fa-edit"></span></td>
-                <td wicket:id="date">25.09.2014</td>
-                <td wicket:id="hours">8.00</td>
-                <td wicket:id="burnedBudget">790</td>
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-                <th>Budget</th>
-                <th>Name</th>
-                <th>Daily Rate</th>
-                <th>Date</th>
-                <th>Hours</th>
-                <th>Budget Burned</th>
-            </tr>
-            </tfoot>
-        </table>
-        <label wicket:id="pageLabel">label</label>
-        <br/>
-
-        <form wicket:id="itemsPerPageForm">
-        Records per page<input type="number" wicket:id="itemsPerPage">
-        </form>
-
-        <div class="dataTables_paginate">
-            <ul class="pagination">
-                <li class="paginate_button" wicket:id="previousPage" style="cursor: pointer">
-                     <a>Previous</a>
-                </li>
-                <li wicket:id="pageNavButtons" class="paginate_button" style="cursor: pointer">
-                    <a wicket:id="pageNavLabel">1</a>
-                </li>
-                <li class="paginate_button" wicket:id="nextPage" style="cursor: pointer">
-                    <a >Next</a>
-                </li>
-            </ul>
-        </div>
+    <div class="dataTables_paginate">
+      <ul class="pagination">
+        <li class="paginate_button" wicket:id="previousPage" style="cursor: pointer">
+          <a>Previous</a>
+        </li>
+        <li wicket:id="pageNavButtons" class="paginate_button" style="cursor: pointer">
+          <a wicket:id="pageNavLabel">1</a>
+        </li>
+        <li class="paginate_button" wicket:id="nextPage" style="cursor: pointer">
+          <a>Next</a>
+        </li>
+      </ul>
     </div>
+  </div>
 </wicket:panel>

@@ -1,8 +1,13 @@
 package org.wickedsource.budgeteer.web.pages.budgets.hours;
 
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.wickedsource.budgeteer.service.budget.BudgetBaseData;
 import org.wickedsource.budgeteer.service.person.PersonService;
+import org.wickedsource.budgeteer.service.record.RecordService;
+import org.wickedsource.budgeteer.service.record.WorkRecord;
 import org.wickedsource.budgeteer.service.record.WorkRecordFilter;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
 import org.wickedsource.budgeteer.web.Mount;
@@ -16,6 +21,7 @@ import org.wickedsource.budgeteer.web.pages.budgets.overview.BudgetsOverviewPage
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Mount("budgets/hours/${id}")
 public class BudgetHoursPage extends BasePage {
@@ -23,14 +29,24 @@ public class BudgetHoursPage extends BasePage {
     @Inject
     private PersonService personService;
 
+    @Inject
+    private RecordService recordService;
+
     public BudgetHoursPage(PageParameters parameters) {
         super(parameters);
 
-        WorkRecordFilter filter = new WorkRecordFilter(BudgeteerSession.get().getProjectId());
-        filter.getBudgetList().add(new BudgetBaseData(getParameterId(), ""));
-        filter.getPossiblePersons().addAll(personService.loadPeopleBaseDataByBudget(getParameterId()));
+        IModel<WorkRecordFilter> filter = Model.of(new WorkRecordFilter(BudgeteerSession.get().getProjectId()));
+        filter.getObject().getBudgetList().add(new BudgetBaseData(getParameterId(), ""));
+        filter.getObject().getPossiblePersons().addAll(personService.loadPeopleBaseDataByBudget(getParameterId()));
 
-        BurnTableWithFilter table = new BurnTableWithFilter("burnTable", filter, this, parameters);
+        IModel<List<WorkRecord>> records = new AbstractReadOnlyModel<List<WorkRecord>>() {
+            @Override
+            public List<WorkRecord> getObject() {
+                return recordService.getFilteredRecords(filter.getObject());
+            }
+        };
+
+        BurnTableWithFilter table = new BurnTableWithFilter("burnTable", records, Model.of(filter));
         table.setBudgetFilterEnabled(false);
         add(table);
     }

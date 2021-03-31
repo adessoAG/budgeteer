@@ -95,6 +95,37 @@ public class DateUtil {
         return result;
     }
 
+    public static DateRange dateRangeForCurrentMonth() {
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH);
+        return dateRangeFor(month);
+    }
+
+    public static DateRange dateRangeForLastMonth() {
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH);
+        return dateRangeFor(month - 1);
+    }
+
+    public static DateRange dateRangeFor(int month) {
+        return new DateRange(beginningOfMonth(month), endOfMonth(month));
+    }
+
+    public static Date beginningOfMonth(int month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        return calendar.getTime();
+    }
+
+    public static Date endOfMonth(int month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month);
+        int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        calendar.set(Calendar.DAY_OF_MONTH, daysInMonth);
+        return calendar.getTime();
+    }
+
     public static String formatDate(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         return dateFormat.format(date);

@@ -428,7 +428,13 @@
         //
 
         if (this.element.is('input') && !this.singleDatePicker) {
-            this.element.val(this.startDate.format(this.locale.format) + this.locale.separator + this.endDate.format(this.locale.format));
+            if (this.enableEmptyDate && (this.element.val() == '' || !this.startDate.isValid())) {
+                this.element.val('');
+            } else {
+                this.element.val(this.startDate.format(this.locale.format) +
+                  this.locale.separator +
+                  this.endDate.format(this.locale.format));
+            }
             this.element.trigger('change');
         } else if (this.element.is('input')) {
             if(this.enableEmptyDate && (this.element.val() == '' || !this.startDate.isValid())){

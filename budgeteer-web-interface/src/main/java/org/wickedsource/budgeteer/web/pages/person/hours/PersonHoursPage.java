@@ -1,8 +1,13 @@
 package org.wickedsource.budgeteer.web.pages.person.hours;
 
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.wickedsource.budgeteer.service.budget.BudgetService;
 import org.wickedsource.budgeteer.service.person.PersonBaseData;
+import org.wickedsource.budgeteer.service.record.RecordService;
+import org.wickedsource.budgeteer.service.record.WorkRecord;
 import org.wickedsource.budgeteer.service.record.WorkRecordFilter;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
 import org.wickedsource.budgeteer.web.Mount;
@@ -16,6 +21,7 @@ import org.wickedsource.budgeteer.web.pages.person.details.PersonDetailsPage;
 import org.wickedsource.budgeteer.web.pages.person.overview.PeopleOverviewPage;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Mount("people/hours/${id}")
 public class PersonHoursPage extends BasePage {
@@ -23,19 +29,28 @@ public class PersonHoursPage extends BasePage {
     @Inject
     private BudgetService budgetService;
 
+    @Inject
+    private RecordService recordService;
+
     public PersonHoursPage(PageParameters parameters) {
         super(parameters);
 
-        WorkRecordFilter filter = new WorkRecordFilter(BudgeteerSession.get().getProjectId());
-        filter.getPersonList().add(new PersonBaseData(getParameterId()));
-        filter.getPossibleBudgets().addAll(budgetService.loadBudgetBaseDataByPersonId(getParameterId()));
+        IModel<WorkRecordFilter> filter = Model.of(new WorkRecordFilter(BudgeteerSession.get().getProjectId()));
+        filter.getObject().getPersonList().add(new PersonBaseData(getParameterId()));
+        filter.getObject().getPossibleBudgets().addAll(budgetService.loadBudgetBaseDataByPersonId(getParameterId()));
 
-        BurnTableWithFilter table = new BurnTableWithFilter("burnTable", filter, this, parameters);
+        IModel<List<WorkRecord>> records = new AbstractReadOnlyModel<List<WorkRecord>>() {
+            @Override
+            public List<WorkRecord> getObject() {
+                return recordService.getFilteredRecords(filter.getObject());
+            }
+        };
+
+        BurnTableWithFilter table = new BurnTableWithFilter("burnTable", records, filter);
         table.setPersonFilterEnabled(false);
         add(table);
     }
 
-    @SuppressWarnings("unchecked")
     protected BreadcrumbsModel getBreadcrumbsModel() {
         BreadcrumbsModel model = new BreadcrumbsModel(DashboardPage.class, PeopleOverviewPage.class);
         model.addBreadcrumb(new Breadcrumb(PersonDetailsPage.class, PersonDetailsPage.createParameters(getParameterId()), new PersonNameModel(getParameterId())));

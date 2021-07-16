@@ -15,6 +15,7 @@ public class PersonDetailDataMapper extends AbstractMapper<PersonDetailDataBean,
         if (sourceObject.getAverageDailyRateInCents() != null) {
             data.setAverageDailyRate(MoneyUtil.createMoneyFromCents(sourceObject.getAverageDailyRateInCents()));
         }
+        data.setDefaultDailyRate(sourceObject.getDefaultDailyRate());
         data.setLastBookedDate(sourceObject.getLastBookedDate());
         data.setFirstBookedDate(sourceObject.getFirstBookedDate());
         data.setHoursBooked(sourceObject.getHoursBooked());

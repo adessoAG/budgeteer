@@ -10,6 +10,7 @@ public class PersonDetailData {
 
     private String name;
     private Money averageDailyRate;
+    private Money defaultDailyRate;
     private Date firstBookedDate;
     private Date lastBookedDate;
     private Double hoursBooked;

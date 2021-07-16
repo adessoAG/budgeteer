@@ -49,6 +49,7 @@ class PersonServiceTest extends ServiceTestTemplate {
         Assertions.assertEquals(fixedDate, data.getFirstBookedDate());
         Assertions.assertEquals(MoneyUtil.createMoneyFromCents(654321L), data.getBudgetBurned());
         Assertions.assertEquals(5.0d, data.getHoursBooked(), 0.1d);
+        Assertions.assertEquals(MoneyUtil.createMoney(100L), data.getDefaultDailyRate());
     }
 
 
@@ -68,6 +69,6 @@ class PersonServiceTest extends ServiceTestTemplate {
     }
 
     private PersonDetailDataBean createPersonDetailDataBean() {
-        return new PersonDetailDataBean(1L, "person1", 6172800000L, 50000L, fixedDate, fixedDate, 5.0d, 654321L);
+        return new PersonDetailDataBean(1L, "person1", 6172800000L, 50000L, fixedDate, fixedDate, 5.0d, 654321L, MoneyUtil.createMoney(100L));
     }
 }

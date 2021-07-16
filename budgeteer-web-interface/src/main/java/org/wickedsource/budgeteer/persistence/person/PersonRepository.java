@@ -17,7 +17,7 @@ public interface PersonRepository extends CrudRepository<PersonEntity, Long> {
     @Query("select new org.wickedsource.budgeteer.persistence.person.PersonBaseDataBean(p.id, p.name, sum(r.minutes * r.dailyRate), sum(r.minutes), max(r.date), p.defaultDailyRate) from PersonEntity p left join p.workRecords r where p.id=:personId group by p.id, p.name, p.defaultDailyRate order by p.name")
     PersonBaseDataBean findBaseDataByPersonId(@Param("personId") long personId);
 
-    @Query("select new org.wickedsource.budgeteer.persistence.person.PersonDetailDataBean(p.id, p.name, sum(r.minutes * r.dailyRate), sum(r.minutes), min(r.date), max(r.date), sum(r.minutes) / 60.0, sum(r.minutes * r.dailyRate) / 60 / 8) from PersonEntity p left join p.workRecords r where p.id=:personId group by p.id, p.name, p.defaultDailyRate order by p.name")
+    @Query("select new org.wickedsource.budgeteer.persistence.person.PersonDetailDataBean(p.id, p.name, sum(r.minutes * r.dailyRate), sum(r.minutes), min(r.date), max(r.date), sum(r.minutes) / 60.0, sum(r.minutes * r.dailyRate) / 60 / 8, p.defaultDailyRate) from PersonEntity p left join p.workRecords r where p.id=:personId group by p.id, p.name, p.defaultDailyRate order by p.name")
     PersonDetailDataBean findDetailDataByPersonId(@Param("personId") long personId);
 
     @Query("select p from PersonEntity p left join fetch p.dailyRates r left join fetch r.budget where p.id=:personId")

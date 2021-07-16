@@ -28,7 +28,6 @@ import org.wickedsource.budgeteer.web.pages.base.delete.DeleteDialog;
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
 import org.wickedsource.budgeteer.web.pages.user.login.LoginPage;
 import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectPage;
-import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectWithKeycloakPage;
 
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class ProjectAdministrationPage extends BasePage {
 
     public ProjectAdministrationPage() {
         add(new CustomFeedbackPanel("feedback"));
-        add(createUserList("userList", new UsersInProjectModel(BudgeteerSession.get().getProjectId())));
+        add(createUserList("userList", () -> userService.getUsersInProject(BudgeteerSession.get().getProjectId())));
         add(createDeleteProjectButton("deleteProjectButton"));
         add(createAddUserForm("addUserForm"));
         add(createEditProjectForm("projectChangeForm"));
@@ -125,7 +124,9 @@ public class ProjectAdministrationPage extends BasePage {
             }
         };
 
-        DropDownChoice<User> userChoice = new DropDownChoice<>("userChoice", form.getModel(), new UsersNotInProjectModel(BudgeteerSession.get().getProjectId()), new UserChoiceRenderer());
+        DropDownChoice<User> userChoice = new DropDownChoice<>("userChoice", form.getModel(),
+                () -> userService.getUsersNotInProject(BudgeteerSession.get().getProjectId()),
+                new UserChoiceRenderer());
         userChoice.setRequired(true);
         form.add(userChoice);
         return form;
@@ -141,11 +142,7 @@ public class ProjectAdministrationPage extends BasePage {
                         projectService.deleteProject(BudgeteerSession.get().getProjectId());
                         BudgeteerSession.get().setProjectSelected(false);
 
-                        if (settings.isKeycloakActivated()) {
-                            setResponsePage(new SelectProjectWithKeycloakPage());
-                        } else {
-                            setResponsePage(new SelectProjectPage(LoginPage.class, new PageParameters()));
-                        }
+                        setResponsePage(new SelectProjectPage(LoginPage.class, new PageParameters()));
                     }
 
                     @Override

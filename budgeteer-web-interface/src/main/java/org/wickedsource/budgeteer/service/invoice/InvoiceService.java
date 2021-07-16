@@ -47,12 +47,12 @@ public class InvoiceService {
 
     @PreAuthorize("canReadInvoice(#invoiceId)")
     public InvoiceBaseData getInvoiceById(long invoiceId) {
-        return mapper.map(invoiceRepository.findOne(invoiceId));
+        return mapper.map(invoiceRepository.findById(invoiceId).orElse(null));
     }
 
     @PreAuthorize("canReadContract(#contractId)")
     public InvoiceBaseData getEmptyInvoiceModel(long contractId) {
-        ContractEntity contract = contractRepository.findOne(contractId);
+        ContractEntity contract = contractRepository.findById(contractId).orElseThrow(RuntimeException::new);
         InvoiceBaseData model = new InvoiceBaseData(contractId, contract.getName());
         Set<ContractInvoiceField> fields = contract.getInvoiceFields();
         for(ContractInvoiceField field : fields){
@@ -62,13 +62,13 @@ public class InvoiceService {
     }
 
     public long save(InvoiceBaseData invoiceBaseData) {
-        ContractEntity contract = contractRepository.findOne(invoiceBaseData.getContractId());
+        ContractEntity contract = contractRepository.findById(invoiceBaseData.getContractId()).orElseThrow(RuntimeException::new);
         InvoiceEntity invoiceEntity = new InvoiceEntity();
         invoiceEntity.setId(0);
         invoiceEntity.setContract(contract);
 
         if(invoiceBaseData.getInvoiceId() != 0){
-            invoiceEntity = invoiceRepository.findOne(invoiceBaseData.getInvoiceId());
+            invoiceEntity = invoiceRepository.findById(invoiceBaseData.getInvoiceId()).orElseThrow(RuntimeException::new);
         }
         //Update basic information
         invoiceEntity.setName(invoiceBaseData.getInvoiceName());
@@ -123,6 +123,6 @@ public class InvoiceService {
 
     @PreAuthorize("canReadInvoice(#invoiceId)")
     public void deleteInvoice(long invoiceId) {
-        invoiceRepository.delete(invoiceId);
+        invoiceRepository.deleteById(invoiceId);
     }
 }

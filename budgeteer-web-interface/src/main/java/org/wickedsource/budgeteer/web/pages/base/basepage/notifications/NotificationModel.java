@@ -1,7 +1,6 @@
 package org.wickedsource.budgeteer.web.pages.base.basepage.notifications;
 
 import org.apache.wicket.injection.Injector;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -41,21 +40,11 @@ public class NotificationModel extends LoadableDetachableModel<List<Notification
     }
 
     public IModel<String> getHeaderModel() {
-        return new AbstractReadOnlyModel<String>() {
-
-            @Override
-            public String getObject() {
-                List<Notification> notificationList = NotificationModel.this.getObject();
-                if (notificationList.isEmpty()) {
-                    return PropertyLoader.getProperty(NotificationDropdown.class, "header.whenEmpty");
-                } else {
-                    return PropertyLoader.getProperty(NotificationDropdown.class, "header.whenFull");
-                }
-            }
-
-            @Override
-            public void detach() {
-            }
+        return () -> {
+            List<Notification> notificationList = NotificationModel.this.getObject();
+            return notificationList.isEmpty()
+                    ? PropertyLoader.getProperty(NotificationDropdown.class, "header.whenEmpty")
+                    : PropertyLoader.getProperty(NotificationDropdown.class, "header.whenFull");
         };
     }
 

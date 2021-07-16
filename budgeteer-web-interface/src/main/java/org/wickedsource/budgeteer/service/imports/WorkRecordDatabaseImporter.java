@@ -95,7 +95,7 @@ public class WorkRecordDatabaseImporter extends RecordDatabaseImporter {
             }
         }
         if(!entitiesToImport.isEmpty()) {
-            workRecordRepository.save(entitiesToImport);
+            workRecordRepository.saveAll(entitiesToImport);
         }
 
         //If all records haven been skipped the startDate of the import is new Date(Long.MAX_VALUE) and the EndDate is null.

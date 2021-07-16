@@ -5,12 +5,15 @@ buildscript {
         jcenter()
     }
 
-    dependencies{
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.6.2"
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.16.0"
         classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: "${spring_boot_version}"
-        classpath group: 'org.springframework', name: 'springloaded', version: "${springloaded_version}"
     }
+}
+
+plugins {
+    id "io.freefair.lombok" version "5.3.0"
 }
 
 apply plugin: 'war'
@@ -21,12 +24,11 @@ apply plugin: 'maven-publish'
 
 
 configurations {
-    querydslapt
-
-    all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-    all*.exclude group: 'log4j', module: 'log4j'
-    all*.exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
-    all*.exclude group: 'org.apache.wicket', module: 'wicket'
+    provided.all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    provided.all*.exclude group: 'log4j', module: 'log4j'
+    provided.all*.exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
+    provided.all*.exclude group: 'org.apache.wicket', module: 'wicket'
+    provided.all*.exclude group: 'javax.servlet'
 }
 
 sourceSets {
@@ -54,78 +56,65 @@ repositories {
 }
 
 dependencies {
-    compile project(':budgeteer-aproda-importer')
-    compile project(':budgeteer-ubw-importer')
-    compile project(':budgeteer-resourceplan-importer')
-    compile project(':budgeteer-report-exporter')
+    implementation project(':budgeteer-importer-api')
+    implementation project(':budgeteer-aproda-importer')
+    implementation project(':budgeteer-ubw-importer')
+    implementation project(':budgeteer-resourceplan-importer')
+    implementation project(':budgeteer-report-exporter')
 
-    compile(group: 'org.springframework', name: 'spring-web', version: "${spring_version}")
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: "${poi_version}"
 
-    compile(
+    implementation(
             [group: 'org.apache.wicket', name: 'wicket-spring', version: "${wicket_spring_version}"],
             [group: 'org.apache.wicket', name: 'wicket-extensions', version: "${wicket_spring_version}"],
             [group: 'org.wicketstuff', name: 'wicketstuff-lazymodel', version: "${wicketstuff_lazymodel_version}"],
             [group: 'org.wicketstuff', name: 'wicketstuff-tinymce4', version: "${wicketstuff_tinymce4_version}"],
-            [group: 'de.adesso.wicked-charts', name: 'wicked-charts-wicket7', version: "${wickedcharts_version}"]
+            [group: 'org.wicketstuff', name: 'wicketstuff-lambda-components', version: "${wicketstuff_tinymce4_version}"],
+            [group: 'de.adesso.wicked-charts', name: 'wicked-charts-wicket8', version: "${wickedcharts_version}"]
     )
 
-    compile group: 'org.springframework', name: 'spring-webmvc', version: "${spring_version}"
-    compile(
+    implementation(
             [group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: "${spring_boot_version}"],
             [group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${spring_boot_version}"],
             [group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: "${spring_boot_version}"],
             [group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: "${spring_boot_version}"],
             [group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: "${spring_boot_version}"],
-    )
-    providedCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: "${spring_boot_version}")
-
-    compile group: 'org.slf4j', name: 'slf4j-api', version: "${slf4j_version}"
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: "${logback_version}"
-    compile group: 'ch.qos.logback', name: 'logback-core', version: "${logback_version}"
-
-    compile group: 'org.reflections', name: 'reflections', version: "${reflections_version}"
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: "${commons_lang_version}"
-    compile group: 'commons-codec', name: 'commons-codec', version: "${commons_codec_version}"
-
-    compile group: 'joda-time', name: 'joda-time', version: "${joda_time_version}"
-    providedCompile group: 'org.joda', name: 'joda-convert', version: "${joda_convert_version}"
-    compile group: 'org.joda', name: 'joda-money', version: "${joda_money_version}"
-    compile group: 'de.jollyday', name: 'jollyday', version: "${jollyday_version}"
-
-    compile "org.flywaydb:flyway-core"
-
-    compile(
-            [group: 'com.querydsl', name: 'querydsl-apt', version: "${query_dsl_version}"],
-            [group: 'com.querydsl', name: 'querydsl-jpa', version: "${query_dsl_version}"]
+            [group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: "${spring_boot_version}"],
     )
 
-    compile(
-            [group: 'org.keycloak', name: 'keycloak-spring-boot-adapter', version: "${keycloak_spring_boot_version}"],
-            [group: 'org.keycloak', name: 'keycloak-tomcat8-adapter', version: "${keycloak_spring_boot_version}"]
-    )
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: "${slf4j_version}"
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: "${logback_version}"
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: "${logback_version}"
 
-    runtime(
+    implementation group: 'org.reflections', name: 'reflections', version: "${reflections_version}"
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: "${commons_lang_version}"
+    implementation group: 'commons-codec', name: 'commons-codec', version: "${commons_codec_version}"
+
+    implementation group: 'org.joda', name: 'joda-money', version: "${joda_money_version}"
+    implementation group: 'de.jollyday', name: 'jollyday', version: "${jollyday_version}"
+
+    runtimeOnly(
             [group: 'org.hsqldb', name: 'hsqldb', version: "${hsqldb_version}"],
             [group: 'mysql', name: 'mysql-connector-java', version: "${mysql_version}"],
-            files("lib/ojdbc7.jar", "lib/orai18n.jar")
+            [group: 'com.oracle.database.jdbc', name: 'ojdbc10', version: "${oracle_database_version}"],
+            [group: 'com.oracle.database.nls', name: 'orai18n', version: "${oracle_database_version}"]
     )
 
-    runtime 'org.postgresql:postgresql'
+    runtime 'org.postgresql:postgresql:42.1.4'
 
-    testCompile(
+    testImplementation(
             [group: 'org.kubek2k', name: 'springockito', version: "${springockito_version}"],
             [group: 'org.kubek2k', name: 'springockito-annotations', version: "${springockito_version}"],
             [group: 'com.github.springtestdbunit', name: 'spring-test-dbunit', version: "${spring_dbunit_version}"],
             [group: 'org.dbunit', name: 'dbunit', version: "${dbunit_version}"],
     )
 
-    testCompile "org.springframework.boot:spring-boot-starter-test"
-    testCompile group: 'org.springframework.security', name: 'spring-security-test', version: "${spring_security_test_version}"
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${spring_boot_version}"
+    testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: "${spring_security_test_version}"
 
-    testCompile('org.junit.platform:junit-platform-launcher:1.0.3')
-    testCompile('com.github.sbrannen:spring-test-junit5:1.0.3')
-
-    providedCompile group: 'org.projectlombok', name: 'lombok', version: "${lombok_version}"
+    testImplementation('org.junit.platform:junit-platform-launcher:1.0.3')
+    testImplementation('com.github.sbrannen:spring-test-junit5:1.0.3')
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.18.1'
 }
 
 sourceSets {
@@ -136,183 +125,8 @@ sourceSets {
     }
 }
 
-task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates the QueryDSL query types') {
-
-    source = sourceSets.main.java
-    classpath = configurations.compile + configurations.querydslapt
-    options.compilerArgs = [
-            "-proc:only",
-            "-processor", "com.querydsl.apt.jpa.JPAAnnotationProcessor"
-    ]
-
-    destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
-}
-
-compileJava {
-    dependsOn generateQueryDSL
-    source generateQueryDSL.destinationDir
-}
-
-compileGeneratedJava {
-    dependsOn generateQueryDSL
-    options.warnings = false
-    classpath += sourceSets.main.runtimeClasspath
-}
-
-clean {
-    delete sourceSets.generated.java.srcDirs
-}
-
-bootRun {
-    // default application configuration for running application via bootRun in development mode
-    // (in production, these properties are defined in application.properties)
-    jvmArgs '-Xdebug',
-            '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009',
-            '-Dserver.port=8080',
-            //'-Dspring.datasource.url=jdbc:hsqldb:file:../../database/budgeteer;shutdown=true;hsqldb.write_delay=false;',
-            '-Dspring.datasource.url=jdbc:hsqldb:mem:budgeteer',
-            //'-Dspring.datasource.url=jdbc:hsqldb:hsql://localhost/budgeteer',
-            '-Dspring.datasource.driverClassName=org.hsqldb.jdbcDriver',
-            '-Dspring.datasource.username=sa',
-            '-Dspring.datasource.password=',
-            '-Dflyway.enabled=false',
-            '-Dspring.jpa.hibernate.ddl-auto=update'
-}
-
 test {
     systemProperties = [
-            'flyway.enabled': 'false'
+            'spring.flyway.enabled': 'false'
     ]
-}
-
-idea {
-    module {
-        scopes.PROVIDED.plus += [configurations.providedCompile]
-        sourceDirs += sourceSets.generated.java.srcDirs
-        downloadSources = true
-    }
-
-    module.iml.withXml {
-        def springFacet = '''
-            <component name="FacetManager">
-                <facet type="Spring" name="Spring">
-                  <configuration>
-                    <fileset id="fileset" name="Spring Application Context" removed="false">
-                      <file>file://$MODULE_DIR$/src/main/java/org/wickedsource/budgeteer/boot/WebInitializer.java</file>
-                    </fileset>
-                  </configuration>
-                </facet>
-                <facet type="web" name="Web">
-                  <configuration>
-                    <webroots>
-                      <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
-                    </webroots>
-                    <sourceRoots>
-                      <root url="file://$MODULE_DIR$/src/generated/java" />
-                      <root url="file://$MODULE_DIR$/src/main/java" />
-                      <root url="file://$MODULE_DIR$/src/main/resources" />
-                    </sourceRoots>
-                  </configuration>
-                </facet>
-            </component>'''
-        it.asNode().append(new XmlParser().parseText(springFacet))
-    }
-}
-
-//Bintray/Artifactory Configuration
-
-// run gradle with "-Dsnapshot=true" to automatically append "-SNAPSHOT" to the version
-version = project.version + (Boolean.valueOf(System.getProperty("snapshot")) ? "-SNAPSHOT" : "")
-sourceCompatibility = 1.8
-
-ext {
-    bintrayUser = System.getProperty("bintray.user")
-    bintrayKey = System.getProperty("bintray.key")
-    buildNumber = System.getProperty("build.number")
-}
-
-def pomConfig = {
-    licenses {
-        license {
-            name "MIT"
-            url "https://opensource.org/licenses/MIT"
-            distribution "repo"
-        }
-    }
-    developers {
-        developer {
-            id "thombergs"
-            name "Tom Hombergs"
-            email "tom.hombergs@gmail.com"
-        }
-    }
-
-    scm {
-        url "https://github.com/adessoag/budgeteer"
-    }
-}
-
-artifactory {
-    contextUrl = 'http://oss.jfrog.org'
-    publish {
-        dependsOn assemble
-        repository {
-            repoKey = 'oss-snapshot-local'
-            username = bintrayUser
-            password = bintrayKey
-        }
-        defaults {
-            publications('mavenPublication')
-            publishArtifacts = true
-            properties = [
-                    'build.number': buildNumber,
-                    'build.name'  : project.name
-            ]
-        }
-    }
-    resolve {
-        repoKey = 'jcenter'
-    }
-    clientConfig.info.setBuildNumber(buildNumber)
-    clientConfig.info.setBuildName(project.name)
-}
-
-bintray {
-    user = bintrayUser
-    key = bintrayKey
-    publications = ['mavenPublication']
-
-    pkg {
-        repo = 'budgeteer'
-        name = 'budgeteer'
-        userOrg = 'adesso'
-        licenses = ['MIT']
-        vcsUrl = 'https://github.com/adessoag/budgeteer'
-        version {
-            desc = "build ${buildNumber}"
-            name = project.version
-            released = new Date()
-        }
-    }
-    publish = true
-}
-
-publishing {
-    publications {
-        mavenPublication(MavenPublication) {
-            artifact(file("$libsDir/${project.name}-${project.version}" + '.war')) {
-                classifier 'exec'
-            }
-            groupId 'de.adesso.budgeteer'
-            artifactId project.name
-            version project.version
-            pom.withXml {
-                def root = asNode()
-                root.appendNode('description', 'Budgeteer')
-                root.appendNode('name', project.name)
-                root.appendNode('url', 'https://github.com/adessoag/budgeteer')
-                root.children().last() + pomConfig
-            }
-        }
-    }
 }

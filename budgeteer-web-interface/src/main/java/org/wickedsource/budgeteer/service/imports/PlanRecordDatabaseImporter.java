@@ -137,7 +137,7 @@ public class PlanRecordDatabaseImporter extends RecordDatabaseImporter {
             }
         }
         if(entitiesToImport != null && !entitiesToImport.isEmpty()) {
-            planRecordRepository.save(entitiesToImport);
+            planRecordRepository.saveAll(entitiesToImport);
 
             // updating start and end date for import record
             if (getImportRecord().getStartDate() == null || getImportRecord().getStartDate().after(earliestDate)) {

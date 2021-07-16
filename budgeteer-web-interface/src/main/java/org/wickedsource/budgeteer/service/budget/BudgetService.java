@@ -78,7 +78,7 @@ public class BudgetService {
      */
     @PreAuthorize("canReadBudget(#budgetId)")
     public BudgetBaseData loadBudgetBaseData(long budgetId) {
-        BudgetEntity budget = budgetRepository.findOne(budgetId);
+        BudgetEntity budget = budgetRepository.findById(budgetId).orElseThrow(RuntimeException::new);
         return budgetBaseDataMapper.map(budget);
     }
 
@@ -123,7 +123,7 @@ public class BudgetService {
      */
     @PreAuthorize("canReadBudget(#budgetId)")
     public BudgetDetailData loadBudgetDetailData(long budgetId) {
-        BudgetEntity budget = budgetRepository.findOne(budgetId);
+        BudgetEntity budget = budgetRepository.findById(budgetId).orElseThrow(RuntimeException::new);
         return enrichBudgetEntity(budget);
     }
 
@@ -231,10 +231,7 @@ public class BudgetService {
      */
     @PreAuthorize("canReadBudget(#budgetId)")
     public EditBudgetData loadBudgetToEdit(long budgetId) {
-        BudgetEntity budget = budgetRepository.findOne(budgetId);
-        if (budget == null) {
-            throw new UnknownEntityException(BudgetEntity.class, budgetId);
-        }
+        BudgetEntity budget = budgetRepository.findById(budgetId).orElseThrow(() -> new UnknownEntityException(BudgetEntity.class, budgetId));
         EditBudgetData data = new EditBudgetData();
         data.setId(budget.getId());
         data.setDescription(budget.getDescription());
@@ -259,9 +256,9 @@ public class BudgetService {
 
         BudgetEntity budget = new BudgetEntity();
         if (data.getId() != 0) {
-            budget = budgetRepository.findOne(data.getId());
+            budget = budgetRepository.findById(data.getId()).orElseThrow(RuntimeException::new);
         } else {
-            ProjectEntity project = projectRepository.findOne(data.getProjectId());
+            ProjectEntity project = projectRepository.findById(data.getProjectId()).orElseThrow(RuntimeException::new);
             budget.setProject(project);
         }
 
@@ -288,7 +285,7 @@ public class BudgetService {
         if (data.getContract() == null) {
             budget.setContract(null);
         } else {
-            ContractEntity contractEntity = contractRepository.findOne(data.getContract().getContractId());
+            ContractEntity contractEntity = contractRepository.findById(data.getContract().getContractId()).orElseThrow(RuntimeException::new);
             budget.setContract(contractEntity);
         }
         budgetRepository.save(budget);
@@ -315,7 +312,7 @@ public class BudgetService {
 
     @PreAuthorize("canReadBudget(#id)")
     public void deleteBudget(long id) {
-        budgetRepository.delete(id);
+        budgetRepository.deleteById(id);
     }
 
     @PreAuthorize("canReadContract(#cId)")

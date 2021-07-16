@@ -3,20 +3,20 @@
     <PROJECT id="1" name="project1"/>
 
     <BUDGET id="1" name="Budget 1" total="100000" import_key="budget1" project_id="1"/>
-    <BUDGET_TAG budget_id="1" tag="Tag 1"/>
-    <BUDGET_TAG budget_id="1" tag="Tag 2"/>
-    <BUDGET_TAG budget_id="1" tag="Tag 3"/>
+    <BUDGET_TAG id="1" budget_id="1" tag="Tag 1"/>
+    <BUDGET_TAG id="2" budget_id="1" tag="Tag 2"/>
+    <BUDGET_TAG id="3" budget_id="1" tag="Tag 3"/>
 
     <BUDGET id="2" name="Budget 2" total="100000" import_key="budget2" project_id="1"/>
-    <BUDGET_TAG budget_id="2" tag="Tag 2"/>
-    <BUDGET_TAG budget_id="2" tag="Tag 3"/>
-    <BUDGET_TAG budget_id="2" tag="Tag 4"/>
+    <BUDGET_TAG id="4" budget_id="2" tag="Tag 2"/>
+    <BUDGET_TAG id="5" budget_id="2" tag="Tag 3"/>
+    <BUDGET_TAG id="6" budget_id="2" tag="Tag 4"/>
 
     <PROJECT id="2" name="project2"/>
 
     <BUDGET id="3" name="Budget 3" total="100000" import_key="budget3" project_id="2"/>
-    <BUDGET_TAG budget_id="3" tag="Tag 6"/>
-    <BUDGET_TAG budget_id="3" tag="Tag 7"/>
-    <BUDGET_TAG budget_id="3" tag="Tag 8"/>
+    <BUDGET_TAG id="7" budget_id="3" tag="Tag 6"/>
+    <BUDGET_TAG id="8" budget_id="3" tag="Tag 7"/>
+    <BUDGET_TAG id="9" budget_id="3" tag="Tag 8"/>
 
 </dataset>

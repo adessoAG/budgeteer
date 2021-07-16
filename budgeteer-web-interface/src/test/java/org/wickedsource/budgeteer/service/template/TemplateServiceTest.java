@@ -62,7 +62,7 @@ class TemplateServiceTest extends ServiceTestTemplate {
     @Test
     void deleteTemplateTest() {
         templateService.deleteTemplate(new TemplateEntity().getId());
-        Mockito.verify(templateRepository, times(1)).delete(anyLong());
+        Mockito.verify(templateRepository, times(1)).deleteById(anyLong());
     }
 
     @Test

@@ -51,7 +51,7 @@ class ProjectServiceTestWithDBUnit extends ServiceIntegrationTestTemplate {
     @DatabaseTearDown(value = "deleteProject.xml", type = DatabaseOperation.DELETE_ALL)
     void deleteEmptyProject() {
         projectService.deleteProject(1);
-        Assertions.assertNull(projectRepository.findOne(1L));
+        Assertions.assertFalse(projectRepository.findById(1L).isPresent());
     }
 
     @Test
@@ -59,10 +59,10 @@ class ProjectServiceTestWithDBUnit extends ServiceIntegrationTestTemplate {
     @DatabaseTearDown(value = "deleteProject.xml", type = DatabaseOperation.DELETE_ALL)
     void deleteProject() {
         projectService.deleteProject(6);
-        Assertions.assertNull(projectRepository.findOne(6L));
-        Assertions.assertEquals(0, planRecordRepository.findByProjectId(6L).size());
-        Assertions.assertEquals(0, workRecordRepository.findByProjectId(6L).size());
-        Assertions.assertEquals(0, invoiceRepository.findByProjectId(6L).size());
-        Assertions.assertEquals(0, contractRepository.findByProjectId(6L).size());
+        Assertions.assertFalse(projectRepository.findById(6L).isPresent());
+        Assertions.assertEquals(0, planRecordRepository.findByProjectId(600L).size());
+        Assertions.assertEquals(0, workRecordRepository.findByProjectId(600L).size());
+        Assertions.assertEquals(0, invoiceRepository.findByProjectId(600L).size());
+        Assertions.assertEquals(0, contractRepository.findByProjectId(600L).size());
     }
 }

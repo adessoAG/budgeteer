@@ -13,6 +13,7 @@ import org.joda.money.Money;
 import org.wickedsource.budgeteer.web.components.dataTable.CustomDataTableEventBehavior;
 import org.wickedsource.budgeteer.web.components.money.MoneyLabel;
 import org.wickedsource.budgeteer.web.components.money.MoneyTextField;
+import org.wicketstuff.lambda.components.ComponentFactory;
 
 public abstract class EditableMoneyField extends GenericPanel<Money> {
 
@@ -26,12 +27,13 @@ public abstract class EditableMoneyField extends GenericPanel<Money> {
     public EditableMoneyField(final String id, final MarkupContainer table, final IModel<Money> model) {
         this(id, table, model, false);
     }
+
     public EditableMoneyField(final String id, final MarkupContainer table, final IModel<Money> model, boolean editable) {
         super(id, model);
         this.isEditable = editable;
         container = new WebMarkupContainer("container");
         container.setOutputMarkupId(true);
-        label = new MoneyLabel("label", getModel()){
+        label = new MoneyLabel("label", getModel()) {
             @Override
             public boolean isVisible() {
                 return !isEditable;
@@ -40,7 +42,7 @@ public abstract class EditableMoneyField extends GenericPanel<Money> {
         label.setOutputMarkupId(true);
         this.add(label);
 
-        form = new Form<Money>("editor", getModel()){
+        form = new Form<Money>("editor", getModel()) {
             @Override
             public boolean isVisible() {
                 return isEditable;
@@ -51,13 +53,13 @@ public abstract class EditableMoneyField extends GenericPanel<Money> {
 
         AjaxButton save = new AjaxButton("save", form) {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 isEditable = false;
                 target.add(container);
                 save(target, EditableMoneyField.this.form);
             }
             @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form){
+            protected void onError(AjaxRequestTarget target){
                 isEditable = true;
                 target.add(container);
                 convertError(target);
@@ -65,7 +67,7 @@ public abstract class EditableMoneyField extends GenericPanel<Money> {
         };
         AjaxButton cancel = new AjaxButton("cancel"){
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 isEditable = false;
                 target.add(container);
             }
@@ -93,10 +95,10 @@ public abstract class EditableMoneyField extends GenericPanel<Money> {
     }
 
     protected abstract void save(AjaxRequestTarget target, Form<Money> form);
+
     protected abstract void cancel(AjaxRequestTarget target, Form<Money> form);
+
     protected abstract void convertError(AjaxRequestTarget target);
-
-
 
 
 }

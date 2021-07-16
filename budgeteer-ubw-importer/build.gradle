@@ -1,5 +1,5 @@
 
 dependencies {
-    compile project(':budgeteer-importer-api')
-    compile 'org.apache.poi:poi-ooxml:3.10.1'
+    implementation project(':budgeteer-importer-api')
+    implementation 'org.apache.poi:poi-ooxml:3.10.1'
 }

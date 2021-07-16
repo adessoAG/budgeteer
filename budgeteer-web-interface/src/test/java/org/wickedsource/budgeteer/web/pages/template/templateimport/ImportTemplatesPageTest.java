@@ -79,7 +79,7 @@ public class ImportTemplatesPageTest extends AbstractWebTestTemplate {
         formTester.setClearFeedbackMessagesBeforeSubmit(true);
         formTester.setFile("fileUpload", getExampleTemplate(), "xlsx");
         formTester.select("type", 1);
-        tester.executeAjaxEvent("importForm:save", "onclick");
+        tester.executeAjaxEvent("importForm:save", "click");
         tester.assertRenderedPage(ImportTemplatesPage.class);
         tester.assertErrorMessages("You have not entered a name.");
 
@@ -97,7 +97,7 @@ public class ImportTemplatesPageTest extends AbstractWebTestTemplate {
         formTester.setFile("fileUpload", getExampleTemplate(), "xlsx");
         formTester.setValue("name", "TEST_N");
         formTester.setValue("description", "TEST_D");
-        tester.executeAjaxEvent("importForm:save", "onclick");
+        tester.executeAjaxEvent("importForm:save", "click");
         tester.assertRenderedPage(ImportTemplatesPage.class);
         tester.assertErrorMessages( "You have not selected a type");
         assertThat(tester.getFeedbackMessages(null)).hasSize(1);
@@ -115,7 +115,7 @@ public class ImportTemplatesPageTest extends AbstractWebTestTemplate {
         formTester.setValue("name", "TEST_N");
         formTester.setValue("description", "TEST_D");
         formTester.select("type", 1);
-        tester.executeAjaxEvent("importForm:save", "onclick");
+        tester.executeAjaxEvent("importForm:save", "click");
         tester.assertRenderedPage(ImportTemplatesPage.class);
         tester.assertNoErrorMessage();
         tester.assertFeedbackMessages(null, "The selected files were imported successfully");

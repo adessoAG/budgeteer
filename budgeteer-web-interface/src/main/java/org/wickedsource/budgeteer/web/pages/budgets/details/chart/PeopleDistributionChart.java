@@ -1,6 +1,6 @@
 package org.wickedsource.budgeteer.web.pages.budgets.details.chart;
 
-import de.adesso.wickedcharts.wicket7.chartjs.Chart;
+import de.adesso.wickedcharts.wicket8.chartjs.Chart;
 
 public class PeopleDistributionChart extends Chart {
 

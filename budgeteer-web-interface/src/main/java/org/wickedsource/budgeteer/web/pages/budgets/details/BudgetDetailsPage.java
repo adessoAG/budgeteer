@@ -9,7 +9,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -45,12 +44,7 @@ public class BudgetDetailsPage extends BasePage {
 
     public BudgetDetailsPage(PageParameters parameters) {
         super(parameters);
-        model = new AbstractReadOnlyModel<BudgetDetailData>() {
-            @Override
-            public BudgetDetailData getObject() {
-                return budgetService.loadBudgetDetailData(getParameterId());
-            }
-        };
+        model = () -> budgetService.loadBudgetDetailData(getParameterId());
         add(new BudgetHighlightsPanel("highlightsPanel", new BudgetHighlightsModel(getParameterId())));
         add(new PeopleDistributionChart("distributionChart", new PeopleDistributionChartModel(getParameterId())));
         add(new BookmarkablePageLink<SingleBudgetWeekReportPage>("weekReportLink", SingleBudgetWeekReportPage.class, createParameters(getParameterId())));
@@ -109,12 +103,7 @@ public class BudgetDetailsPage extends BasePage {
                 }
             }
         };
-        contractLinkName.add(new Label("contractName", new AbstractReadOnlyModel() {
-                    @Override
-                    public String getObject() {
-                        return StringUtils.isBlank(model.getObject().getContractName()) ? getString("links.contract.label.no.contract") : model.getObject().getContractName();
-                    }
-                })
+        contractLinkName.add(new Label("contractName", () -> StringUtils.isBlank(model.getObject().getContractName()) ? getString("links.contract.label.no.contract") : model.getObject().getContractName())
         );
 
         add(contractLinkName);

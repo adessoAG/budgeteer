@@ -40,7 +40,7 @@ public class BudgetNotesForm extends Form<EditBudgetData> {
      * The editor with settings and a CustomFeedbackPanel are added.
      */
     private void addComponents() {
-        TinyMCESettings settings = new TinyMCESettings(TinyMCESettings.Theme.modern, TinyMCESettings.Language.en);
+        TinyMCESettings settings = new TinyMCESettings(TinyMCESettings.Theme.modern, TinyMCESettings.Language.en_GB);
 
         // The names of the plugins are stored in a string array and then added to the settings in a for-each loop.
         String plugins = "advlist autolink autosave link image lists charmap print preview hr anchor pagebreak " +

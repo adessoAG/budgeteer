@@ -10,8 +10,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
-import org.keycloak.KeycloakPrincipal;
-import org.keycloak.representations.AccessToken;
 import org.wickedsource.budgeteer.web.BudgeteerReferences;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
 import org.wickedsource.budgeteer.web.BudgeteerSettings;
@@ -28,11 +26,6 @@ import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
 import org.wickedsource.budgeteer.web.pages.user.edit.EditUserPage;
 import org.wickedsource.budgeteer.web.pages.user.login.LoginPage;
 import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectPage;
-import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectWithKeycloakPage;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
 
 @NeedsLogin
 @NeedsProject
@@ -76,34 +69,12 @@ public abstract class BasePage extends WebPage {
 
         BookmarkablePageLink pageLink = new BookmarkablePageLink<ProjectAdministrationPage>("administrationLink", ProjectAdministrationPage.class);
         add(pageLink);
-        if (!currentUserIsAdmin()) {
-            pageLink.setVisible(false);
-        }
+        pageLink.setVisible(false);
         add(createProjectChangeLink("changeProjectLink"));
         add(createMyProfileLink("myProfileLink"));
         add(createLogoutLink("logoutLink"));
         add(createDashboardLink("dashboardLink"));
         add(new HeaderResponseContainer("JavaScriptContainer", "JavaScriptContainer"));
-    }
-
-    private boolean currentUserIsAdmin() {
-        HashSet<String> roles = loadRolesFromCurrentUser();
-        if (roles != null && roles.contains("admin")) {
-            return true;
-        } else if (roles == null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private HashSet<String> loadRolesFromCurrentUser() {
-        if (settings.isKeycloakActivated()) {
-            HttpServletRequest request = (HttpServletRequest) getRequestCycle().getRequest().getContainerRequest();
-            AccessToken accessToken = ((KeycloakPrincipal) request.getUserPrincipal()).getKeycloakSecurityContext().getToken();
-            return (HashSet<String>) accessToken.getRealmAccess().getRoles();
-        }
-        return null;
     }
 
     @Override
@@ -118,42 +89,26 @@ public abstract class BasePage extends WebPage {
     }
 
     private Link createProjectChangeLink(String id) {
-        return new Link(id) {
+        return new Link<Void>(id) {
             @Override
             public void onClick() {
-                if (settings.isKeycloakActivated()) {
-                    setResponsePage(new SelectProjectWithKeycloakPage());
-                } else {
-                    setResponsePage(new SelectProjectPage(this.getWebPage().getClass(), getPageParameters()));
-                }
+                setResponsePage(new SelectProjectPage(this.getWebPage().getClass(), getPageParameters()));
             }
         };
     }
 
     private Link createLogoutLink(String id) {
-        return new Link(id) {
+        return new Link<Void>(id) {
             @Override
             public void onClick() {
-                if (settings.isKeycloakActivated()) {
-                    logoutFromKeycloak();
-                }
                 BudgeteerSession.get().logout();
                 setResponsePage(LoginPage.class);
-            }
-
-            private void logoutFromKeycloak() {
-                HttpServletRequest request = (HttpServletRequest) getRequestCycle().getRequest().getContainerRequest();
-                try {
-                    request.logout();
-                } catch (ServletException e) {
-                    e.printStackTrace();
-                }
             }
         };
     }
 
     private Link createMyProfileLink(String id) {
-        return new Link(id) {
+        return new Link<Void>(id) {
             @Override
             public void onClick() {
                 setResponsePage(new EditUserPage(this.getWebPage().getClass(), new PageParameters().add("userId", BudgeteerSession.get().getLoggedInUser().getId())));

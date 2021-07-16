@@ -1,12 +1,12 @@
 package org.wickedsource.budgeteer.web.planning;
 
-import org.joda.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,10 +29,10 @@ class DefaultCalendarSpeedTest {
 		DefaultCalendar calWithHolidays = DefaultCalendar.calendarYear(2015);
 		calWithHolidays.setHolidayManager(new HolidayConfiguration("de", "nw"));
 
-		List<TimePeriod> periods = Arrays.asList(new TimePeriod(new LocalDate(2015, 3, 1), new LocalDate(2015, 3, 31)),
-				new TimePeriod(new LocalDate(2015, 4, 30), new LocalDate(2015, 4, 30)),
-				new TimePeriod(new LocalDate(2015, 5, 3), new LocalDate(2015, 5, 7)),
-				new TimePeriod(new LocalDate(2015, 7, 19), new LocalDate(2015, 8, 6)));
+		List<TimePeriod> periods = Arrays.asList(new TimePeriod(LocalDate.of(2015, 3, 1), LocalDate.of(2015, 3, 31)),
+				new TimePeriod(LocalDate.of(2015, 4, 30), LocalDate.of(2015, 4, 30)),
+				new TimePeriod(LocalDate.of(2015, 5, 3), LocalDate.of(2015, 5, 7)),
+				new TimePeriod(LocalDate.of(2015, 7, 19), LocalDate.of(2015, 8, 6)));
 
 		long beforeStart = System.currentTimeMillis();
 

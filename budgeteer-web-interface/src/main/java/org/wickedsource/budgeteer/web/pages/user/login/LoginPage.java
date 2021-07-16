@@ -6,8 +6,6 @@ import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.keycloak.KeycloakPrincipal;
-import org.keycloak.representations.AccessToken;
 import org.wickedsource.budgeteer.service.user.InvalidLoginCredentialsException;
 import org.wickedsource.budgeteer.service.user.TokenStatus;
 import org.wickedsource.budgeteer.service.user.User;
@@ -21,9 +19,6 @@ import org.wickedsource.budgeteer.web.pages.user.forgotpassword.ForgotPasswordPa
 import org.wickedsource.budgeteer.web.pages.user.register.RegisterPage;
 import org.wickedsource.budgeteer.web.pages.user.resettoken.ResetTokenPage;
 import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectPage;
-import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectWithKeycloakPage;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
@@ -64,13 +59,6 @@ public class LoginPage extends DialogPage {
     }
 
     private void build() {
-        if (settings.isKeycloakActivated()) { // Skip Login Page if Keycloak is activated
-            HttpServletRequest request = (HttpServletRequest) getRequestCycle().getRequest().getContainerRequest();
-            AccessToken accessToken = ((KeycloakPrincipal) request.getUserPrincipal()).getKeycloakSecurityContext().getToken();
-            User user = userService.login(accessToken.getPreferredUsername());
-            BudgeteerSession.get().login(user);
-            setResponsePage(new SelectProjectWithKeycloakPage());
-        } else {
             Form<LoginCredentials> form = new Form<LoginCredentials>("loginForm", model(from(new LoginCredentials()))) {
                 @Override
                 protected void onSubmit() {
@@ -91,6 +79,5 @@ public class LoginPage extends DialogPage {
             form.add(new PasswordTextField("password", model(from(form.getModel()).getPassword())));
             form.add(new BookmarkablePageLink<RegisterPage>("registerLink", RegisterPage.class));
             form.add(new BookmarkablePageLink<ForgotPasswordPage>("forgotPasswordLink", ForgotPasswordPage.class));
-        }
     }
 }

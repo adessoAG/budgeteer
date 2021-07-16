@@ -1,20 +1,24 @@
 package org.wickedsource.budgeteer.persistence.record;
 
 import org.joda.money.Money;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.wickedsource.budgeteer.persistence.budget.BudgetEntity;
 import org.wickedsource.budgeteer.persistence.person.PersonEntity;
 import org.wickedsource.budgeteer.persistence.project.ProjectEntity;
+import org.wickedsource.budgeteer.service.record.WorkRecordFilter;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.Date;
 import java.util.List;
 
-public interface WorkRecordRepository extends CrudRepository<WorkRecordEntity, Long>, QueryDslPredicateExecutor<WorkRecordEntity>, RecordRepository, JpaSpecificationExecutor {
+public interface WorkRecordRepository extends CrudRepository<WorkRecordEntity, Long>, RecordRepository, JpaSpecificationExecutor<WorkRecordEntity> {
 
     /**
      * Aggregates the monetary value of all work records in the given budget.
@@ -74,10 +78,10 @@ public interface WorkRecordRepository extends CrudRepository<WorkRecordEntity, L
     @Query("delete from WorkRecordEntity r where r.budget.id in ( select b.id from BudgetEntity b where b.project.id = :projectId)")
     void deleteByProjectId(@Param("projectId") long projectId);
 
-    @Query("select new org.wickedsource.budgeteer.persistence.record.MissingDailyRateBean(r.person.id, r.person.name, min(r.date), max(r.date)) from WorkRecordEntity r where r.dailyRate = 0 and r.person.project.id = :projectId group by r.person.id, r.person.name")
+    @Query("select new org.wickedsource.budgeteer.persistence.record.MissingDailyRateBean(r.person.id, r.person.name, min(r.date), max(r.date)) from WorkRecordEntity r where r.dailyRate = org.wickedsource.budgeteer.MoneyUtil.ZERO and r.person.project.id = :projectId group by r.person.id, r.person.name")
     List<MissingDailyRateBean> getMissingDailyRatesForProject(@Param("projectId") long projectId);
 
-    @Query("select new org.wickedsource.budgeteer.persistence.record.MissingDailyRateForBudgetBean(r.person.id, r.person.name, min(r.date), max(r.date), b.name, b.id) from WorkRecordEntity r join r.budget b where r.dailyRate = 0 and r.person.id = :personId group by r.person.id, r.person.name, b.name, b.id")
+    @Query("select new org.wickedsource.budgeteer.persistence.record.MissingDailyRateForBudgetBean(r.person.id, r.person.name, min(r.date), max(r.date), b.name, b.id) from WorkRecordEntity r join r.budget b where r.dailyRate = org.wickedsource.budgeteer.MoneyUtil.ZERO and r.person.id = :personId group by r.person.id, r.person.name, b.name, b.id")
     List<MissingDailyRateForBudgetBean> getMissingDailyRatesForPerson(@Param("personId") long personId);
 
     @Override

@@ -25,7 +25,6 @@ public class IntegrationTestConfiguration {
         Properties properties = new Properties();
 
         properties.setProperty("budgeteer.mail.activate", "false");
-        properties.setProperty("adapter.keycloak.activated", "false");
         properties.setProperty("flyway.enabled", "false");
         pspc.setProperties(properties);
         return pspc;

@@ -74,7 +74,7 @@ public class NotificationService {
             }
         }
 
-        UserEntity user = userRepository.findOne(userId);
+        UserEntity user = userRepository.findById(userId).orElse(null);
         if (user != null) {
             if (user.getMail() == null) {
                 notifications.add(new MissingMailNotification(user.getId()));

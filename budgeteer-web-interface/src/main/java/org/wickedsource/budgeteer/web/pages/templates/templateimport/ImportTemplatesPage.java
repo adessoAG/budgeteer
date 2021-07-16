@@ -85,7 +85,8 @@ public class ImportTemplatesPage extends DialogPageWithBacklink {
         form.add(createBacklink("backlink2"));
         form.add(new AjaxButton("save") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onSubmit(AjaxRequestTarget target) {
+                System.out.println("hi");
                 try {
                     if(model(from(templateFormInputDto)).getObject().getName() == null){
                         error(getString("message.error.no.name"));
@@ -107,7 +108,7 @@ public class ImportTemplatesPage extends DialogPageWithBacklink {
             }
 
             @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
+            protected void onError(AjaxRequestTarget target) {
                 target.add(feedback);
             }
         });
@@ -116,7 +117,7 @@ public class ImportTemplatesPage extends DialogPageWithBacklink {
         form.add(createExampleFileButton("exampleDownloadButton"));
         form.add(new TextField<>("name", model(from(templateFormInputDto).getName())));
         form.add(new TextField<>("description", model(from(templateFormInputDto).getDescription())));
-        AjaxLink checkBox = new AjaxLink("setAsDefault") {
+        AjaxLink<Void> checkBox = new AjaxLink<Void>("setAsDefault") {
             @Override
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
                 if(templateFormInputDto.isDefault()){

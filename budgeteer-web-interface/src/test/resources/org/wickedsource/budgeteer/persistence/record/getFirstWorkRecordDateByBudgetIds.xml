@@ -5,9 +5,9 @@
     <BUDGET id="1" name="Budget 1" total="100000" import_key="budget1" project_id="1"/>
     <BUDGET id="2" name="Budget 2" total="200000" import_key="budget2" project_id="1"/>
     <BUDGET id="3" name="Budget 3" total="300000" import_key="budget3" project_id="1"/>
-    <BUDGET_TAG budget_id="1" tag="Tag 1"/>
-    <BUDGET_TAG budget_id="1" tag="Tag 2"/>
-    <BUDGET_TAG budget_id="1" tag="Tag 3"/>
+    <BUDGET_TAG id="1" budget_id="1" tag="Tag 1"/>
+    <BUDGET_TAG id="2" budget_id="1" tag="Tag 2"/>
+    <BUDGET_TAG id="3" budget_id="1" tag="Tag 3"/>
 
     <PERSON id="1" name="person1" import_key="person1" project_id="1"/>
 

@@ -3,6 +3,8 @@ package org.wickedsource.budgeteer.web.pages.dashboard;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.wickedsource.budgeteer.service.project.ProjectService;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
 import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.pages.base.basepage.BasePage;
@@ -27,13 +29,16 @@ public class DashboardPage extends BasePage {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@SpringBean
+    private ProjectService projectService;
+
 	public DashboardPage() {
         BurnedBudgetChartModel burnedBudgetModel = new BurnedBudgetChartModel(BudgeteerSession.get().getProjectId(), 8);
         add(new BurnedBudgetChart("burnedBudgetChart", burnedBudgetModel));
         
-        add(new Label("username", new UsernameModel()));
+        add(new Label("username", () -> BudgeteerSession.get().getLoggedInUser().getName()));
 
-        add(new Label("projectname", new ProjectnameModel()));
+        add(new Label("projectname", () -> projectService.findProjectById(BudgeteerSession.get().getProjectId()).getName()));
 
         AverageDailyRateChartModel avgDailyRateModel = new AverageDailyRateChartModel(BudgeteerSession.get().getProjectId(), 30);
         add(new AverageDailyRateChart("averageDailyRateChart", avgDailyRateModel));

@@ -25,7 +25,7 @@ class ContractReportMonthlyDataMapperTest extends IntegrationTestTemplate {
     @DatabaseSetup("contractMapperTest.xml")
     @DatabaseTearDown(value = "contractMapperTest.xml", type = DatabaseOperation.DELETE_ALL)
     void whenTaxrateIsNull() {
-        ContractEntity contractEntity = contractRepository.findOne(3L);
+        ContractEntity contractEntity = contractRepository.findById(3L).orElseThrow(RuntimeException::new);
         ContractReportData contractBaseData = testSubject.map(contractEntity, new Date());
         Assertions.assertThat(contractBaseData.getTaxRate()).isCloseTo(0.00, Percentage.withPercentage(10e-8));
     }
@@ -34,7 +34,7 @@ class ContractReportMonthlyDataMapperTest extends IntegrationTestTemplate {
     @DatabaseSetup("contractMapperTest.xml")
     @DatabaseTearDown(value = "contractMapperTest.xml", type = DatabaseOperation.DELETE_ALL)
     void whenTaxrateIsNotNull() {
-        ContractEntity contractEntity = contractRepository.findOne(4L);
+        ContractEntity contractEntity = contractRepository.findById(4L).orElseThrow(RuntimeException::new);
         ContractReportData contractBaseData = testSubject.map(contractEntity, new Date());
         Assertions.assertThat(contractBaseData.getTaxRate()).isCloseTo(1.00, Percentage.withPercentage(10e-8));
     }

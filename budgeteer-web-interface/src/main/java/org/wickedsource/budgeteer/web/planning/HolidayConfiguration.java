@@ -3,7 +3,8 @@ package org.wickedsource.budgeteer.web.planning;
 import de.jollyday.HolidayManager;
 import de.jollyday.ManagerParameter;
 import de.jollyday.ManagerParameters;
-import org.joda.time.LocalDate;
+
+import java.time.LocalDate;
 
 import static de.jollyday.HolidayType.OFFICIAL_HOLIDAY;
 import static de.jollyday.HolidayType.UNOFFICIAL_HOLIDAY;

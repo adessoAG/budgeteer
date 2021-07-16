@@ -1,6 +1,5 @@
 package org.wickedsource.budgeteer.web.pages.dashboard.dailyratechart;
 
-import com.google.common.collect.Lists;
 import de.adesso.wickedcharts.chartjs.ChartConfiguration;
 import de.adesso.wickedcharts.chartjs.chartoptions.CallbackFunction;
 import de.adesso.wickedcharts.chartjs.chartoptions.ChartType;
@@ -19,10 +18,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class AverageDailyRateChartConfiguration extends ChartConfiguration implements Serializable {
 
@@ -52,7 +48,7 @@ public class AverageDailyRateChartConfiguration extends ChartConfiguration imple
 				.setLabel(PropertyLoader.getProperty(AverageDailyRateChart.class, "chart.seriesName"));
 		
 		setData(new Data()
-				.setDatasets(Arrays.asList(dataset1))
+				.setDatasets(Collections.singletonList(dataset1))
 				.setLabels(getLabels(model.getNumberOfDays(),dateFormat)));
 
     }
@@ -64,7 +60,8 @@ public class AverageDailyRateChartConfiguration extends ChartConfiguration imple
     	for(int i = 0; i < numberOfDays; i++) {
     		list.add(new TextLabel(nowDate.minus(i, ChronoUnit.DAYS).format(formatter)));
     	}
-    	return Lists.reverse(list);
+    	Collections.reverse(list);
+    	return list;
     }
 
 }

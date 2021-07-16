@@ -22,7 +22,7 @@ public class AggregatedRecord {
     private Money budgetBurned_gross;
 
     public AggregatedRecord(PlanAndWorkRecord planAndWorkRecord) {
-        Calendar c = Calendar.getInstance(Locale.GERMAN);
+        Calendar c = Calendar.getInstance(Locale.GERMANY);
         c.clear();
         c.set(Calendar.YEAR, planAndWorkRecord.getYear());
 

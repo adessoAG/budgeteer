@@ -1,9 +1,10 @@
 package org.wickedsource.budgeteer.web;
 
-import de.adesso.wickedcharts.wicket7.JavaScriptResourceRegistry;
+import de.adesso.wickedcharts.wicket8.JavaScriptResourceRegistry;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.head.filter.JavaScriptFilteredIntoFooterHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.markup.html.WebPage;
@@ -12,7 +13,6 @@ import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.IProvider;
 import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
@@ -27,6 +27,7 @@ import org.wickedsource.budgeteer.web.components.security.BudgeteerUnauthorizedC
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
 @Component
 public class BudgeteerApplication extends WebApplication implements ApplicationContextAware {
@@ -45,6 +46,8 @@ public class BudgeteerApplication extends WebApplication implements ApplicationC
     public void init() {
         super.init();
 
+        getCspSettings().blocking().disabled();
+
         getMarkupSettings().setStripWicketTags(true);
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, context));
         initWickedCharts();
@@ -53,27 +56,12 @@ public class BudgeteerApplication extends WebApplication implements ApplicationC
 
         getSecuritySettings().setAuthorizationStrategy(new BudgeteerAuthorizationStrategy());
         getSecuritySettings().setUnauthorizedComponentInstantiationListener(new BudgeteerUnauthorizedComponentInstantiationListener());
-        setHeaderResponseDecorator(new JavaScriptToBucketResponseDecorator("JavaScriptContainer"));
+        getHeaderResponseDecorators().add(response -> new JavaScriptFilteredIntoFooterHeaderResponse(response, "JavaScriptContainer"));
 
         // add component instantiation/onBeforeRender listener
         final BudgeteerRequiresProjectListener listener = new BudgeteerRequiresProjectListener();
         getComponentInstantiationListeners().add(listener);
         getComponentPreOnBeforeRenderListeners().add(listener);
-    }
-
-    /** * Decorates an original IHeaderResponse and renders all javascript items * (JavaScriptHeaderItem), to a specific container in the page. */
-    static class JavaScriptToBucketResponseDecorator implements IHeaderResponseDecorator {
-
-        private String bucketName;
-
-        public JavaScriptToBucketResponseDecorator(String bucketName){
-            this.bucketName = bucketName;
-        }
-
-        @Override public IHeaderResponse decorate(IHeaderResponse response){
-            return new JavaScriptFilteredIntoFooterHeaderResponse(response, bucketName);
-        }
-
     }
 
     @Override
@@ -124,7 +112,7 @@ public class BudgeteerApplication extends WebApplication implements ApplicationC
     }
 
     @Override
-    public IProvider<IExceptionMapper> getExceptionMapperProvider() {
+    public Supplier<IExceptionMapper> getExceptionMapperProvider() {
         return BudgeteerExceptionMapper::new;
     }
 

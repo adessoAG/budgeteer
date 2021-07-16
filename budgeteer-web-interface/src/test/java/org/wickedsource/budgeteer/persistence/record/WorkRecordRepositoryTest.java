@@ -160,9 +160,9 @@ class WorkRecordRepositoryTest extends IntegrationTestTemplate {
     @DatabaseTearDown(value = "updateDailyRates.xml", type = DatabaseOperation.DELETE_ALL)
     void testUpdateWorkRecordDailyRates() throws Exception {
         repository.updateDailyRates(1L, 1L, format.parse("01.01.2015"), format.parse("15.08.2015"), MoneyUtil.createMoneyFromCents(50000L));
-        WorkRecordEntity record = repository.findOne(1L);
+        WorkRecordEntity record = repository.findById(1L).orElseThrow(RuntimeException::new);
         Assertions.assertEquals(MoneyUtil.createMoneyFromCents(50000L), record.getDailyRate());
-        record = repository.findOne(3L);
+        record = repository.findById(3L).orElseThrow(RuntimeException::new);
         Assertions.assertEquals(MoneyUtil.createMoneyFromCents(50000L), record.getDailyRate());
     }
 
@@ -171,9 +171,9 @@ class WorkRecordRepositoryTest extends IntegrationTestTemplate {
     @DatabaseTearDown(value = "updateDailyRates.xml", type = DatabaseOperation.DELETE_ALL)
     void testUpdateWorkRecordDailyRatesWithEditedRecord() throws Exception {
         repository.updateDailyRates(1L, 1L, format.parse("01.01.2015"), format.parse("15.08.2015"), MoneyUtil.createMoneyFromCents(50000L));
-        WorkRecordEntity record = repository.findOne(1L);
+        WorkRecordEntity record = repository.findById(1L).orElseThrow(RuntimeException::new);
         Assertions.assertEquals(MoneyUtil.createMoneyFromCents(50000L), record.getDailyRate());
-        record = repository.findOne(6L);
+        record = repository.findById(6L).orElseThrow(RuntimeException::new);
         Assertions.assertEquals(MoneyUtil.createMoneyFromCents(10000L), record.getDailyRate());
     }
 

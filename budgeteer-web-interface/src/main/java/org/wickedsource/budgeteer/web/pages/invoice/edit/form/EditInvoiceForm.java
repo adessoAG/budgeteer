@@ -101,9 +101,9 @@ public class EditInvoiceForm  extends Form<InvoiceBaseData> {
         add(newAttributeField);
         AjaxButton addAttributeButton = new AjaxButton("addAttribute") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 if (newAttributeField.getModelObject() != null) {
-                    ((InvoiceBaseData) form.getModelObject()).getDynamicInvoiceFields().add(new DynamicAttributeField(newAttributeField.getModelObject(), ""));
+                    ((InvoiceBaseData) getForm().getModelObject()).getDynamicInvoiceFields().add(new DynamicAttributeField(newAttributeField.getModelObject(), ""));
                     target.add(table, newAttributeField, feedbackPanel);
                 } else {
                     this.error(getString("feedback.error.nameEmpty"));
@@ -112,18 +112,18 @@ public class EditInvoiceForm  extends Form<InvoiceBaseData> {
             }
 
             @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
+            protected void onError(AjaxRequestTarget target) {
                 target.add(feedbackPanel);
             }
         };
         add(addAttributeButton);
         add(new AjaxButton("save") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 try {
-                    ((InvoiceBaseData) form.getModelObject()).getFileUploadModel().setFile(fileUpload.getFile());
-                    ((InvoiceBaseData) form.getModelObject()).getFileUploadModel().setFileName(fileUpload.getFileName());
-                    ((InvoiceBaseData) form.getModelObject()).setInvoiceId(service.save((InvoiceBaseData) form.getModelObject()));
+                    ((InvoiceBaseData) getForm().getModelObject()).getFileUploadModel().setFile(fileUpload.getFile());
+                    ((InvoiceBaseData) getForm().getModelObject()).getFileUploadModel().setFileName(fileUpload.getFileName());
+                    ((InvoiceBaseData) getForm().getModelObject()).setInvoiceId(service.save((InvoiceBaseData) getForm().getModelObject()));
                     this.success(getString("feedback.success"));
                 } catch(Exception e){
                     e.printStackTrace();
@@ -133,7 +133,7 @@ public class EditInvoiceForm  extends Form<InvoiceBaseData> {
             }
 
             @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
+            protected void onError(AjaxRequestTarget target) {
                 target.add(feedbackPanel);
             }
         });

@@ -98,8 +98,10 @@ public class SelectProjectPage extends DialogPageWithBacklink {
             }
         };
         final Form<ProjectBaseData> form = new Form<>("chooseProjectForm", defaultProjectModel);
-
-        DropDownChoice<ProjectBaseData> choice = new DropDownChoice<>("projectChoice", form.getModel(), new ProjectsForUserModel(BudgeteerSession.get().getLoggedInUser().getId()), new ProjectChoiceRenderer());
+        form.setOutputMarkupId(true);
+        DropDownChoice<ProjectBaseData> choice = new DropDownChoice<>("projectChoice", form.getModel(),
+                () -> projectService.getProjectsForUser(BudgeteerSession.get().getLoggedInUser().getId()),
+                new ProjectChoiceRenderer());
         choice.setRequired(true);
         choice.add(new OnChangeAjaxBehavior() {
             @Override
@@ -111,9 +113,9 @@ public class SelectProjectPage extends DialogPageWithBacklink {
 
         AjaxSubmitLink markProjectAsDefault = new AjaxSubmitLink("markProject") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 try {
-                    projectService.setDefaultProject(BudgeteerSession.get().getLoggedInUser().getId(), ((ProjectBaseData) form.getModelObject()).getId());
+                    projectService.setDefaultProject(BudgeteerSession.get().getLoggedInUser().getId(), form.getModelObject().getId());
                     info(getString("chooseProjectForm.defaultProject.successful"));
                 } catch (Exception e) {
                     error(getString("chooseProjectForm.defaultProject.failed"));
@@ -124,8 +126,8 @@ public class SelectProjectPage extends DialogPageWithBacklink {
 
         AjaxSubmitLink goButton = new AjaxSubmitLink("goButton") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                BudgeteerSession.get().setProjectId(((ProjectBaseData) form.getModelObject()).getId());
+            protected void onSubmit(AjaxRequestTarget target) {
+                BudgeteerSession.get().setProjectId(form.getModelObject().getId());
                 setResponsePage(DashboardPage.class);
             }
         };
@@ -135,7 +137,7 @@ public class SelectProjectPage extends DialogPageWithBacklink {
     }
 
     private Link createLogoutlink(String id) {
-        return new Link(id) {
+        return new Link<Void>(id) {
             @Override
             public void onClick() {
                 BudgeteerSession.get().logout();

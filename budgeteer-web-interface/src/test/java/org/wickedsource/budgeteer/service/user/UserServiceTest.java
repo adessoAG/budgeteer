@@ -1,14 +1,10 @@
 package org.wickedsource.budgeteer.service.user;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.wickedsource.budgeteer.persistence.project.ProjectEntity;
 import org.wickedsource.budgeteer.persistence.project.ProjectRepository;
 import org.wickedsource.budgeteer.persistence.user.*;
@@ -74,8 +70,8 @@ class UserServiceTest extends ServiceTestTemplate{
 
     @Test
     void testAddUserToProjectSuccess() {
-        when(userRepository.findOne(1L)).thenReturn(createUserEntity());
-        when(projectRepository.findOne(1L)).thenReturn(createProjectEntity());
+        when(userRepository.findById(1L)).thenReturn(createUserEntityOptional());
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(createProjectEntity()));
         service.addUserToProject(1L, 1L);
         // assertion not possible when mocking repository
     }
@@ -83,7 +79,7 @@ class UserServiceTest extends ServiceTestTemplate{
     @Test
     void testAddUserToProjectFailProjectNotFound() {
         Assertions.assertThrows(UnknownEntityException.class, () -> {
-            when(userRepository.findOne(1L)).thenReturn(createUserEntity());
+            when(userRepository.findById(1L)).thenReturn(createUserEntityOptional());
             service.addUserToProject(1L, 1L);
         });
     }
@@ -91,15 +87,15 @@ class UserServiceTest extends ServiceTestTemplate{
     @Test
     void testAddUserToProjectFailUserNotFound() {
         Assertions.assertThrows(UnknownEntityException.class, () -> {
-            when(projectRepository.findOne(1L)).thenReturn(createProjectEntity());
+            when(projectRepository.findById(1L)).thenReturn(Optional.of(createProjectEntity()));
             service.addUserToProject(1L, 1L);
         });
     }
 
     @Test
     void testRemoveUserFromProjectSuccess() {
-        when(userRepository.findOne(1L)).thenReturn(createUserEntity());
-        when(projectRepository.findOne(1L)).thenReturn(createProjectEntity());
+        when(userRepository.findById(1L)).thenReturn(createUserEntityOptional());
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(createProjectEntity()));
         service.removeUserFromProject(1L, 1L);
         // assertion not possible when mocking repository
     }
@@ -107,7 +103,7 @@ class UserServiceTest extends ServiceTestTemplate{
     @Test
     void testRemoveUserFromProjectFailProjectNotFound() {
         Assertions.assertThrows(UnknownEntityException.class, () -> {
-            when(userRepository.findOne(1L)).thenReturn(createUserEntity());
+            when(userRepository.findById(1L)).thenReturn(createUserEntityOptional());
             service.removeUserFromProject(1L, 1L);
         });
     }
@@ -115,7 +111,7 @@ class UserServiceTest extends ServiceTestTemplate{
     @Test
     void testRemoveUserFromProjectFailUserNotFound() {
         Assertions.assertThrows(UnknownEntityException.class, () -> {
-            when(projectRepository.findOne(1L)).thenReturn(createProjectEntity());
+            when(projectRepository.findById(1L)).thenReturn(Optional.of(createProjectEntity()));
             service.removeUserFromProject(1L, 1L);
         });
     }
@@ -138,7 +134,7 @@ class UserServiceTest extends ServiceTestTemplate{
 
     @Test
     void testCheckPassword() {
-        when(userRepository.findOne(1L)).thenReturn(createUserEntity());
+        when(userRepository.findById(1L)).thenReturn(createUserEntityOptional());
         Assertions.assertTrue(service.checkPassword(1L, "password"));
         Assertions.assertFalse(service.checkPassword(1L, "PASSWORD"));
     }
@@ -163,9 +159,10 @@ class UserServiceTest extends ServiceTestTemplate{
 
     @Test
     void testLoadUserToEdit() {
-        UserEntity userMock = createUserEntity();
-        when(userRepository.findOne(1L)).thenReturn(userMock);
+        Optional<UserEntity> userMockOptional = createUserEntityOptional();
+        when(userRepository.findById(1L)).thenReturn(userMockOptional);
         EditUserData user = service.loadUserToEdit(1L);
+        UserEntity userMock = userMockOptional.get();
         Assertions.assertEquals(userMock.getId(), user.getId());
         Assertions.assertEquals(userMock.getMail(), user.getMail());
         Assertions.assertEquals(userMock.getName(), user.getName());
@@ -175,11 +172,11 @@ class UserServiceTest extends ServiceTestTemplate{
     @Test
     void testSaveUserUsernameAlreadyInUseException() {
         Assertions.assertThrows(UsernameAlreadyInUseException.class, () -> {
-            UserEntity user = createUserEntity();
+            Optional<UserEntity> user = createUserEntityOptional();
             UserEntity user2 = createUserEntity();
             user2.setId(2L);
             user2.setName("user2");
-            when(userRepository.findOne(1L)).thenReturn(user);
+            when(userRepository.findById(1L)).thenReturn(user);
             EditUserData editUserData = service.loadUserToEdit(1L);
             when(userRepository.findByName("user2")).thenReturn(user2);
             editUserData.setName("user2");
@@ -190,11 +187,11 @@ class UserServiceTest extends ServiceTestTemplate{
     @Test
     void testSaveUserMailAlreadyInUseException() {
         Assertions.assertThrows(MailAlreadyInUseException.class, () -> {
-            UserEntity user = createUserEntity();
+            Optional<UserEntity> user = createUserEntityOptional();
             UserEntity user2 = createUserEntity();
             user2.setId(2L);
             user2.setMail("user2@budgeteer.local");
-            when(userRepository.findOne(1L)).thenReturn(user);
+            when(userRepository.findById(1L)).thenReturn(user);
             EditUserData editUserData = service.loadUserToEdit(1L);
             when(userRepository.findByMail("user2@budgeteer.local")).thenReturn(user2);
             editUserData.setMail("user2@budgeteer.local");
@@ -204,13 +201,13 @@ class UserServiceTest extends ServiceTestTemplate{
 
     @Test
     void testSaveUser() throws MailAlreadyInUseException, UsernameAlreadyInUseException {
-        UserEntity user = createUserEntity();
-        when(userRepository.findOne(1L)).thenReturn(user);
+        Optional<UserEntity> user = createUserEntityOptional();
+        when(userRepository.findById(1L)).thenReturn(user);
         EditUserData editUserData = service.loadUserToEdit(1L);
         editUserData.setName("user2");
         service.saveUser(editUserData, false);
-        when(userRepository.findOne(1L)).thenReturn(user);
-        Assertions.assertEquals(editUserData.getName(), user.getName());
+        when(userRepository.findById(1L)).thenReturn(user);
+        Assertions.assertEquals(editUserData.getName(), user.get().getName());
     }
 
     @Test
@@ -266,14 +263,14 @@ class UserServiceTest extends ServiceTestTemplate{
     @Test
     void getUserByIdUserIdNotFoundException() {
         Assertions.assertThrows(UserIdNotFoundException.class, () -> {
-            when(userRepository.findOne(2L)).thenReturn(createUserEntity());
+            when(userRepository.findById(2L)).thenReturn(createUserEntityOptional());
             service.getUserById(1L);
         });
     }
 
     @Test
     void getUserById() throws UserIdNotFoundException {
-        when(userRepository.findOne(1L)).thenReturn(createUserEntity());
+        when(userRepository.findById(1L)).thenReturn(createUserEntityOptional());
         UserEntity user = service.getUserById(1L);
         Assertions.assertNotNull(user);
     }
@@ -352,6 +349,17 @@ class UserServiceTest extends ServiceTestTemplate{
         user.setPassword(passwordHasher.hash("password"));
         user.setAuthorizedProjects(new ArrayList<ProjectEntity>());
         return user;
+    }
+
+    private Optional<UserEntity> createUserEntityOptional() {
+        UserEntity user = new UserEntity();
+        user.setId(1L);
+        user.setName("user");
+        user.setMail("user@budgeteer.local");
+        user.setMailVerified(true);
+        user.setPassword(passwordHasher.hash("password"));
+        user.setAuthorizedProjects(new ArrayList<ProjectEntity>());
+        return Optional.of(user);
     }
 
     private ProjectEntity createProjectEntity() {

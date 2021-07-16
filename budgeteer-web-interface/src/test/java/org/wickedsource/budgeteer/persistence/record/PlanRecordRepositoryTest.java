@@ -35,9 +35,9 @@ class PlanRecordRepositoryTest extends IntegrationTestTemplate {
     @DatabaseTearDown(value = "updateDailyRates.xml", type = DatabaseOperation.DELETE_ALL)
     void testUpdatePlanRecordDailyRates() throws Exception {
         repository.updateDailyRates(1L, 1L, format.parse("01.01.2015"), format.parse("15.08.2015"), MoneyUtil.createMoneyFromCents(50000L));
-        PlanRecordEntity record = repository.findOne(1L);
+        PlanRecordEntity record = repository.findById(1L).orElseThrow(RuntimeException::new);
         Assertions.assertEquals(MoneyUtil.createMoneyFromCents(50000L), record.getDailyRate());
-        record = repository.findOne(3L);
+        record = repository.findById(3L).orElseThrow(RuntimeException::new);
         Assertions.assertEquals(MoneyUtil.createMoneyFromCents(50000L), record.getDailyRate());
     }
 

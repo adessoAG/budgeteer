@@ -59,7 +59,7 @@ public class EditTemplatePageTest extends AbstractWebTestTemplate {
         FormTester formTester = tester.newFormTester("editForm", true);
         formTester.setClearFeedbackMessagesBeforeSubmit(true);
         formTester.setFile("fileUpload", null, "");
-        tester.executeAjaxEvent("editForm:save", "onclick");
+        tester.executeAjaxEvent("editForm:save", "click");
         tester.assertRenderedPage(EditTemplatePage.class);
         tester.assertErrorMessages("You have not entered a name.",
                 "You have not selected a type");
@@ -79,7 +79,7 @@ public class EditTemplatePageTest extends AbstractWebTestTemplate {
         formTester.setValue("description", "TEST_D");
         formTester.select("type", 1);
         formTester.setFile("fileUpload", null, "");
-        tester.executeAjaxEvent("editForm:save", "onclick");
+        tester.executeAjaxEvent("editForm:save", "click");
         tester.assertRenderedPage(EditTemplatePage.class);
         tester.assertNoErrorMessage();
         tester.assertFeedbackMessages(null, "The template was edited successfully");
@@ -96,7 +96,7 @@ public class EditTemplatePageTest extends AbstractWebTestTemplate {
         formTester.setClearFeedbackMessagesBeforeSubmit(true);
         formTester.setValue("name", "TEST_N");
         formTester.setValue("description", "TEST_D");
-        tester.executeAjaxEvent("editForm:save", "onclick");
+        tester.executeAjaxEvent("editForm:save", "click");
         tester.assertRenderedPage(EditTemplatePage.class);
         tester.assertErrorMessages( "You have not selected a type");
         assertThat(tester.getFeedbackMessages(null)).hasSize(1);

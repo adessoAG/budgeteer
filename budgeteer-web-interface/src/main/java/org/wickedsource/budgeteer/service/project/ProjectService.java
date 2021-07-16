@@ -65,7 +65,7 @@ public class ProjectService {
      * @return the base data of the newly create project.
      */
     public ProjectBaseData createProject(String projectName, long initialUserId) throws ProjectNameAlreadyInUseException {
-        UserEntity user = userRepository.findOne(initialUserId);
+        UserEntity user = userRepository.findById(initialUserId).orElseThrow(RuntimeException::new);
         ProjectEntity project = new ProjectEntity();
         for(ProjectEntity e : projectRepository.findAll()){
             if(e.getName().equals(projectName)){
@@ -86,7 +86,7 @@ public class ProjectService {
      * @return list of all projects the user has access to.
      */
     public List<ProjectBaseData> getProjectsForUser(long userId) {
-        UserEntity user = userRepository.findOne(userId);
+        UserEntity user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
         return mapper.map(user.getAuthorizedProjects());
     }
 
@@ -96,7 +96,7 @@ public class ProjectService {
      * @return the default project respectively null if no project is set as default
      */
     public ProjectBaseData getDefaultProjectForUser(long userId){
-        UserEntity user = userRepository.findOne(userId);
+        UserEntity user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
         ProjectEntity defaultProject = user.getDefaultProject();
         if(defaultProject == null){
             return null;
@@ -122,8 +122,9 @@ public class ProjectService {
         invoiceRepository.deleteByProjectId(projectId);
         contractRepository.deleteContractFieldByProjectId(projectId);
         contractRepository.deleteByProjectId(projectId);
-        if(projectRepository.findOne(projectId) != null) {
-            List<UserEntity> userList = projectRepository.findOne(projectId).getAuthorizedUsers();
+        ProjectEntity projectEntity = projectRepository.findById(projectId).orElse(null);
+        if(projectEntity != null) {
+            List<UserEntity> userList = projectEntity.getAuthorizedUsers();
             if (userList != null) {
                 for (UserEntity u : userList) {
                     if (u.getDefaultProject() != null && u.getDefaultProject().getId() == projectId) {
@@ -133,7 +134,7 @@ public class ProjectService {
                 }
             }
         }
-        projectRepository.delete(projectId);
+        projectRepository.deleteById(projectId);
     }
 
     /**
@@ -142,19 +143,19 @@ public class ProjectService {
      * @param projectId ID of the project that should become the default-project
      */
     public void setDefaultProject(long userId, long projectId){
-        ProjectEntity project = projectRepository.findOne(projectId);
-        UserEntity user = userRepository.findOne(userId);
+        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(RuntimeException::new);
+        UserEntity user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
         user.setDefaultProject(project);
         userRepository.save(user);
     }
 
     public Project findProjectById(long projectId){
-        ProjectEntity entity = projectRepository.findOne(projectId);
+        ProjectEntity entity = projectRepository.findById(projectId).orElseThrow(RuntimeException::new);
         return new Project(entity.getId(), entity.getProjectStart(), entity.getProjectEnd(), entity.getName());
     }
 
     public void save(Project project) {
-        ProjectEntity projectEntity = projectRepository.findOne(project.getProjectId());
+        ProjectEntity projectEntity = projectRepository.findById(project.getProjectId()).orElseThrow(RuntimeException::new);
         projectEntity.setName(project.getName());
         DateRange dateRange = project.getDateRange();
         projectEntity.setProjectStart(dateRange == null ? null : dateRange.getStartDate());

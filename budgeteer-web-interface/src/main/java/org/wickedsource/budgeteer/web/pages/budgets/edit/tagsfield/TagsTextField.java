@@ -20,9 +20,14 @@ public class TagsTextField extends TextField<List<String>> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <List> IConverter<List> getConverter(Class<List> type) {
-        return (IConverter<List>) new TagsConverter();
+    protected IConverter<?> createConverter(Class<?> type) {
+        return new TagsConverter();
+    }
+
+    @Override
+    public void convertInput() {
+        IConverter<List<String>> converter = getConverter(getType());
+        setConvertedInput(converter.convertToObject(getValue(), getLocale()));
     }
 
     @Override

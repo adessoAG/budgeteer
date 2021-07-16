@@ -1,0 +1,4 @@
+DELETE
+FROM BUDGET_TAG
+WHERE
+    tag = ''

@@ -1,7 +1,6 @@
 package org.wickedsource.budgeteer.web.pages.person.edit.personrateform;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.extensions.markup.html.form.select.SelectOptions;
@@ -49,7 +48,7 @@ public abstract class PersonEditPanel extends Panel {
         rateField = new MoneyTextField("rateField", new Model<>(data.getRate()));
         rateField.setRequired(true);
 
-        dateRangeField = new DateRangeInputField("dateRangeField", new Model<>(data.getDateRange()), DateRangeInputField.DROP_LOCATION.UP);
+        dateRangeField = new DateRangeInputField("dateRangeField", new Model<>(data.getDateRange()), DateRangeInputField.DropLocation.UP);
         dateRangeField.setRequired(true);
 
         List<OptionGroup<BudgetBaseData>> possibleBudgets =

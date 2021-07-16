@@ -55,9 +55,9 @@ public class BudgetReportForm extends Form<ReportMetaInformation> {
         add(new NotificationListPanel("notificationList", new BudgetReportNotificationModel()));
         add(new CustomFeedbackPanel("feedback"));
         add(new DateRangeInputField("monthlyRange", model(from(getModel()).getMonthlyTimeRange()),
-                DateRangeInputField.DROP_LOCATION.DOWN));
+                DateRangeInputField.DropLocation.DOWN));
         add(new DateRangeInputField("overallRange", model(from(getModel()).getOverallTimeRange()),
-                DateRangeInputField.DROP_LOCATION.DOWN));
+                DateRangeInputField.DropLocation.DOWN));
         DropDownChoice<Template> templateDropDown = new DropDownChoice<Template>("template", model(from(getModel()).getTemplate()),
                 new LoadableDetachableModel<List<? extends Template>>() {
 

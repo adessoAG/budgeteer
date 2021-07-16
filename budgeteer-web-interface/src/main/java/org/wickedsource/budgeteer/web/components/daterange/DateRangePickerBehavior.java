@@ -10,19 +10,23 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.wickedsource.budgeteer.web.BudgeteerReferences;
 
-import java.util.HashMap;
 import java.util.Map;
 
-
 public class DateRangePickerBehavior extends Behavior{
-    private HashMap<String, String> options;
+    private final Map<String, String> options;
+    private final boolean clearable;
 
     /**
     * Implements the DateRangePicker
     * @param options @see <a href="http://www.daterangepicker.com/#options">Options</a>
     */
-    public DateRangePickerBehavior(HashMap<String, String> options){
+    public DateRangePickerBehavior(Map<String, String> options){
+        this(options, false);
+    }
+
+    public DateRangePickerBehavior(Map<String, String> options, boolean clearable){
         this.options = options;
+        this.clearable = clearable;
     }
 
     @Override
@@ -41,20 +45,26 @@ public class DateRangePickerBehavior extends Behavior{
     }
 
     public String getScript(Component component) {
-        StringBuilder script = new StringBuilder("$('#"+component.getMarkupId()+"').daterangepicker(");
+        StringBuilder script = new StringBuilder(String.format("$('#%s').daterangepicker(", component.getMarkupId()));
         if(options != null && ! options.isEmpty()){
             script.append("{");
             int index = 1;
             for(Map.Entry<String, String> entry : options.entrySet()) {
-                script.append(entry.getKey() + ": " + entry.getValue());
-                if(index < options.size()){
+                script.append(entry.getKey()).append(": ").append(entry.getValue());
+                if(index < options.size() || clearable){
                     script.append(",");
                 }
                 index++;
             }
+            if (clearable) {
+                script.append("locale: { cancelLabel: 'Clear' }");
+            }
             script.append("}");
         }
         script.append(");");
+        if (clearable) {
+            script.append(String.format("$('#%s').on('cancel.daterangepicker', function(ev, picker) { $(this).val(''); })", component.getMarkupId()));
+        }
         return script.toString();
     }
 }

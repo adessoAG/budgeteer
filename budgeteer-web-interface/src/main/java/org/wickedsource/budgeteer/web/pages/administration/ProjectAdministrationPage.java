@@ -70,8 +70,7 @@ public class ProjectAdministrationPage extends BasePage {
             }
         };
         form.add(new TextField<String>("projectTitle", model(from(form.getModelObject()).getName())));
-        DateRange defaultDateRange = new DateRange(DateUtil.getBeginOfYear(), DateUtil.getEndOfYear());
-        form.add(new DateRangeInputField("projectStart", model(from(form.getModelObject()).getDateRange()), defaultDateRange, DateRangeInputField.DROP_LOCATION.DOWN));
+        form.add(new DateRangeInputField("projectStart", model(from(form.getModelObject()).getDateRange()), null, DateRangeInputField.DropLocation.DOWN));
         return form;
     }
 

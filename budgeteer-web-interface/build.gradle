@@ -100,7 +100,7 @@ dependencies {
             [group: 'com.oracle.database.nls', name: 'orai18n', version: "${oracle_database_version}"]
     )
 
-    runtime 'org.postgresql:postgresql'
+    runtime 'org.postgresql:postgresql:42.1.4'
 
     testImplementation(
             [group: 'org.kubek2k', name: 'springockito', version: "${springockito_version}"],

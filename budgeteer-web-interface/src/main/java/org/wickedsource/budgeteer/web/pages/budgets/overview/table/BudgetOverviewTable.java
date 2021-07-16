@@ -160,13 +160,7 @@ public class BudgetOverviewTable extends Panel {
                 };
                 //Creating a separate tooltip is necessary because disabling the button also causes tooltips to disappear.
                 WebMarkupContainer deleteBudgetTooltip = new WebMarkupContainer("deleteBudgetTooltip");
-                if(item.getModelObject().getContractName() != null){
-                    deleteBudgetTooltip.add(new AttributeAppender("style", "cursor: not-allowed;", " "));
-                    deleteBudgetTooltip.add(new AttributeModifier("title", getString("contract.still.exist")));
-                    deleteBudgetButton.setEnabled(false);
-                }else{
-                    deleteBudgetTooltip.add(new AttributeModifier("title", getString("delete.budget")));
-                }
+                deleteBudgetTooltip.add(new AttributeModifier("title", getString("delete.budget")));
                 deleteBudgetTooltip.add(deleteBudgetButton);
                 item.add(deleteBudgetTooltip);
 

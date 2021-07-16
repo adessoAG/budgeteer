@@ -1,7 +1,6 @@
 package org.wickedsource.budgeteer.web.pages.contract.budgetOverview;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.pages.base.basepage.BasePage;
 import org.wickedsource.budgeteer.web.pages.base.basepage.breadcrumbs.BreadcrumbsModel;
 import org.wickedsource.budgeteer.web.pages.budgets.overview.table.BudgetOverviewTable;
@@ -9,8 +8,9 @@ import org.wickedsource.budgeteer.web.pages.budgets.overview.table.FilteredBudge
 import org.wickedsource.budgeteer.web.pages.contract.details.ContractDetailsPage;
 import org.wickedsource.budgeteer.web.pages.contract.overview.ContractOverviewPage;
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
-@Mount("/contracts/details/budgets/${id}")
+@MountPath("/contracts/details/budgets/${id}")
 public class BudgetForContractOverviewPage extends BasePage {
 
     public BudgetForContractOverviewPage(PageParameters pageParameters) {

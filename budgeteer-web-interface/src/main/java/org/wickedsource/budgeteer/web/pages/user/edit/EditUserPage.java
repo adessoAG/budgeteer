@@ -6,14 +6,14 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wickedsource.budgeteer.service.user.EditUserData;
 import org.wickedsource.budgeteer.service.user.UserService;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.pages.base.dialogpage.DialogPageWithBacklink;
 import org.wickedsource.budgeteer.web.pages.user.edit.edituserform.EditUserForm;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
 
-@Mount({"user/edit/${id}"})
+@MountPath("user/edit/${id}")
 public class EditUserPage extends DialogPageWithBacklink {
 
     @SpringBean

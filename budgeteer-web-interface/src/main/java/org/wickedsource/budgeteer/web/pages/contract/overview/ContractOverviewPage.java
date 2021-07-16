@@ -12,7 +12,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wickedsource.budgeteer.service.contract.ContractService;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.components.tax.TaxSwitchLabelModel;
 import org.wickedsource.budgeteer.web.pages.base.basepage.BasePage;
 import org.wickedsource.budgeteer.web.pages.base.basepage.breadcrumbs.BreadcrumbsModel;
@@ -20,9 +19,10 @@ import org.wickedsource.budgeteer.web.pages.contract.edit.EditContractPage;
 import org.wickedsource.budgeteer.web.pages.contract.overview.report.ContractReportDialog;
 import org.wickedsource.budgeteer.web.pages.contract.overview.table.ContractOverviewTable;
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 
-@Mount("contracts")
+@MountPath("contracts")
 public class ContractOverviewPage extends BasePage{
 
     @SpringBean

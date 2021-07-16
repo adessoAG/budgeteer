@@ -5,7 +5,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.wickedsource.budgeteer.service.record.AggregatedRecord;
 import org.wickedsource.budgeteer.service.statistics.TargetAndActual;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.components.aggregatedrecordtable.AggregatedRecordTable;
 import org.wickedsource.budgeteer.web.components.targetactualchart.TargetAndActualChart;
 import org.wickedsource.budgeteer.web.components.targetactualchart.TargetAndActualChartConfiguration;
@@ -18,10 +17,11 @@ import org.wickedsource.budgeteer.web.pages.person.details.PersonDetailsPage;
 import org.wickedsource.budgeteer.web.pages.person.monthreport.chart.PersonMonthlyAggregationModel;
 import org.wickedsource.budgeteer.web.pages.person.monthreport.table.PersonMonthlyAggregatedRecordsModel;
 import org.wickedsource.budgeteer.web.pages.person.overview.PeopleOverviewPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
 
-@Mount("people/months/${id}")
+@MountPath("people/months/${id}")
 public class PersonMonthReportPage extends BasePage {
 
     public PersonMonthReportPage(PageParameters parameters) {

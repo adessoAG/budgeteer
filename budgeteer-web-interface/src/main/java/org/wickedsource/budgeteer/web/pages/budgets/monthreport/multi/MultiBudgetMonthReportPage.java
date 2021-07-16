@@ -5,7 +5,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.wickedsource.budgeteer.service.record.AggregatedRecord;
 import org.wickedsource.budgeteer.service.statistics.TargetAndActual;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.components.aggregatedrecordtable.AggregatedRecordTable;
 import org.wickedsource.budgeteer.web.components.links.NetGrossLink;
 import org.wickedsource.budgeteer.web.components.targetactualchart.TargetAndActualChart;
@@ -16,13 +15,14 @@ import org.wickedsource.budgeteer.web.pages.budgets.components.targetactualchart
 import org.wickedsource.budgeteer.web.pages.budgets.components.weekreporttable.BudgetsMonthlyAggregatedRecordsModel;
 import org.wickedsource.budgeteer.web.pages.budgets.overview.BudgetsOverviewPage;
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
 
-@Mount("budgets/months")
+@MountPath("budgets/months")
 public class MultiBudgetMonthReportPage extends BasePage {
 
     public MultiBudgetMonthReportPage(PageParameters parameters) {

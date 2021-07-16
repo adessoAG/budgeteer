@@ -5,7 +5,6 @@ import org.wickedsource.budgeteer.service.budget.BudgetBaseData;
 import org.wickedsource.budgeteer.service.person.PersonService;
 import org.wickedsource.budgeteer.service.record.WorkRecordFilter;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.components.burntable.BurnTableWithFilter;
 import org.wickedsource.budgeteer.web.pages.base.basepage.BasePage;
 import org.wickedsource.budgeteer.web.pages.base.basepage.breadcrumbs.Breadcrumb;
@@ -14,10 +13,11 @@ import org.wickedsource.budgeteer.web.pages.budgets.BudgetNameModel;
 import org.wickedsource.budgeteer.web.pages.budgets.details.BudgetDetailsPage;
 import org.wickedsource.budgeteer.web.pages.budgets.overview.BudgetsOverviewPage;
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.inject.Inject;
 
-@Mount("budgets/hours/${id}")
+@MountPath("budgets/hours/${id}")
 public class BudgetHoursPage extends BasePage {
 
     @Inject

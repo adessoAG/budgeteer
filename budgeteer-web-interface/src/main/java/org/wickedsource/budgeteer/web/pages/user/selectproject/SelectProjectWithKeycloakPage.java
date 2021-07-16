@@ -15,17 +15,17 @@ import org.wickedsource.budgeteer.service.project.ProjectNameAlreadyInUseExcepti
 import org.wickedsource.budgeteer.service.project.ProjectService;
 import org.wickedsource.budgeteer.service.user.UserService;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.components.customFeedback.CustomFeedbackPanel;
 import org.wickedsource.budgeteer.web.pages.base.dialogpage.DialogPage;
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
 import org.wickedsource.budgeteer.web.pages.user.login.LoginPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 
-@Mount("/selectProjectWithKeycloak")
+@MountPath("/selectProjectWithKeycloak")
 public class SelectProjectWithKeycloakPage extends DialogPage {
 
     @SpringBean

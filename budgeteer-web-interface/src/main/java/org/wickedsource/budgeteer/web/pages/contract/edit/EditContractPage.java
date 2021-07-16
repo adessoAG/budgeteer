@@ -8,15 +8,15 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 import org.wickedsource.budgeteer.service.contract.ContractBaseData;
 import org.wickedsource.budgeteer.service.contract.ContractService;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.pages.base.dialogpage.DialogPageWithBacklink;
 import org.wickedsource.budgeteer.web.pages.contract.edit.form.EditContractForm;
 import org.wickedsource.budgeteer.web.pages.contract.overview.ContractOverviewPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
 
-@Mount({"contracts/edit/#{id}"})
+@MountPath("contracts/edit/#{id}")
 public class EditContractPage extends DialogPageWithBacklink {
 
     @SpringBean

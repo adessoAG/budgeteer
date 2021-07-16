@@ -3,12 +3,12 @@ package org.wickedsource.budgeteer.web.pages.person.edit;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.pages.base.dialogpage.DialogPageWithBacklink;
 import org.wickedsource.budgeteer.web.pages.person.edit.personrateform.EditPersonForm;
 import org.wickedsource.budgeteer.web.pages.person.overview.PeopleOverviewPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
-@Mount({"people/edit/${id}"})
+@MountPath("people/edit/${id}")
 public class EditPersonPage extends DialogPageWithBacklink {
 
     private IEditPersonPageStrategy strategy;

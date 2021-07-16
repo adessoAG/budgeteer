@@ -8,17 +8,19 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wickedsource.budgeteer.persistence.user.UserEntity;
-import org.wickedsource.budgeteer.service.user.*;
-import org.wickedsource.budgeteer.web.BudgeteerSession;
-import org.wickedsource.budgeteer.web.Mount;
+import org.wickedsource.budgeteer.service.user.MailNotFoundException;
+import org.wickedsource.budgeteer.service.user.TokenStatus;
+import org.wickedsource.budgeteer.service.user.UserIdNotFoundException;
+import org.wickedsource.budgeteer.service.user.UserService;
 import org.wickedsource.budgeteer.web.components.customFeedback.CustomFeedbackPanel;
 import org.wickedsource.budgeteer.web.pages.base.dialogpage.DialogPage;
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
 
-@Mount("resettoken")
+@MountPath("resettoken")
 public class ResetTokenPage extends DialogPage {
 
     @SpringBean

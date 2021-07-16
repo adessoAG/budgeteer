@@ -14,7 +14,6 @@ import org.wickedsource.budgeteer.service.user.User;
 import org.wickedsource.budgeteer.service.user.UserService;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
 import org.wickedsource.budgeteer.web.BudgeteerSettings;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.components.customFeedback.CustomFeedbackPanel;
 import org.wickedsource.budgeteer.web.pages.base.dialogpage.DialogPage;
 import org.wickedsource.budgeteer.web.pages.user.forgotpassword.ForgotPasswordPage;
@@ -22,13 +21,14 @@ import org.wickedsource.budgeteer.web.pages.user.register.RegisterPage;
 import org.wickedsource.budgeteer.web.pages.user.resettoken.ResetTokenPage;
 import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectPage;
 import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectWithKeycloakPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
 
-@Mount("/login")
+@MountPath("/login")
 public class LoginPage extends DialogPage {
 
     @SpringBean

@@ -13,10 +13,6 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.IProvider;
-import org.reflections.Reflections;
-import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -25,8 +21,7 @@ import org.wickedsource.budgeteer.web.components.instantiation.BudgeteerRequires
 import org.wickedsource.budgeteer.web.components.security.BudgeteerAuthorizationStrategy;
 import org.wickedsource.budgeteer.web.components.security.BudgeteerUnauthorizedComponentInstantiationListener;
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
-
-import java.util.Set;
+import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 
 @Component
 public class BudgeteerApplication extends WebApplication implements ApplicationContextAware {
@@ -49,7 +44,7 @@ public class BudgeteerApplication extends WebApplication implements ApplicationC
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, context));
         initWickedCharts();
         getJavaScriptLibrarySettings().setJQueryReference(BudgeteerReferences.getJQueryReference());
-        mountPages();
+        new AnnotatedMountScanner().scanPackage("org.wickedsource.budgeteer.web.pages").mount(this);
 
         getSecuritySettings().setAuthorizationStrategy(new BudgeteerAuthorizationStrategy());
         getSecuritySettings().setUnauthorizedComponentInstantiationListener(new BudgeteerUnauthorizedComponentInstantiationListener());
@@ -83,26 +78,6 @@ public class BudgeteerApplication extends WebApplication implements ApplicationC
             return RuntimeConfigurationType.DEVELOPMENT;
         } else {
             return RuntimeConfigurationType.DEPLOYMENT;
-        }
-    }
-
-    /**
-     * Scans the classpath for all pages annotated with the Mount annotation and mounts them.
-     */
-    @SuppressWarnings("unchecked")
-    private void mountPages() {
-        Reflections reflections = new Reflections(
-                new ConfigurationBuilder().setUrls(
-                        ClasspathHelper.forPackage("org.wickedsource.budgeteer")).setScanners(
-                        new TypeAnnotationsScanner()));
-        Set<Class<?>> pagesToMount = reflections.getTypesAnnotatedWith(Mount.class, true);
-
-        for (Class<?> page : pagesToMount) {
-            Class<? extends WebPage> pageClass = (Class<? extends WebPage>) page;
-            Mount mount = pageClass.getAnnotation(Mount.class);
-            for (String mountUrl : mount.value()) {
-                mountPage(mountUrl, pageClass);
-            }
         }
     }
 

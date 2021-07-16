@@ -13,18 +13,18 @@ import org.wickedsource.budgeteer.service.imports.Import;
 import org.wickedsource.budgeteer.service.imports.ImportService;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
 import org.wickedsource.budgeteer.web.ClassAwareWrappingModel;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.pages.base.basepage.BasePage;
 import org.wickedsource.budgeteer.web.pages.base.basepage.breadcrumbs.BreadcrumbsModel;
 import org.wickedsource.budgeteer.web.pages.base.delete.DeleteDialog;
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
 import org.wickedsource.budgeteer.web.pages.imports.fileimport.ImportFilesPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
-@Mount("imports")
+@MountPath("imports")
 public class ImportsOverviewPage extends BasePage {
     @SpringBean
     private ImportService importService;

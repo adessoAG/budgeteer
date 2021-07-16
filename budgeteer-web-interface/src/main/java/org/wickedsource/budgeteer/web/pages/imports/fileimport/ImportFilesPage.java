@@ -28,11 +28,10 @@ import org.wickedsource.budgeteer.imports.api.*;
 import org.wickedsource.budgeteer.service.imports.ImportService;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
 import org.wickedsource.budgeteer.web.ClassAwareWrappingModel;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.components.customFeedback.CustomFeedbackPanel;
 import org.wickedsource.budgeteer.web.pages.base.dialogpage.DialogPageWithBacklink;
 import org.wickedsource.budgeteer.web.pages.imports.ImportsOverviewPage;
-import org.wickedsource.budgeteer.web.pages.person.overview.PeopleOverviewPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
@@ -41,7 +40,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mount("import/importFiles")
+@MountPath("import/importFiles")
 public class ImportFilesPage extends DialogPageWithBacklink {
 
     @SpringBean

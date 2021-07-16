@@ -11,15 +11,15 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wickedsource.budgeteer.service.user.MailAlreadyInUseException;
 import org.wickedsource.budgeteer.service.user.UserService;
 import org.wickedsource.budgeteer.service.user.UsernameAlreadyInUseException;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.components.customFeedback.CustomFeedbackPanel;
 import org.wickedsource.budgeteer.web.pages.base.dialogpage.DialogPage;
 import org.wickedsource.budgeteer.web.pages.user.login.LoginPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
 
-@Mount("/register")
+@MountPath("/register")
 public class RegisterPage extends DialogPage {
 
     @SpringBean

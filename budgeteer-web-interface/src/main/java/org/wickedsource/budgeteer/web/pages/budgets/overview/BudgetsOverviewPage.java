@@ -11,7 +11,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wickedsource.budgeteer.service.budget.BudgetService;
 import org.wickedsource.budgeteer.service.budget.BudgetTagFilter;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.components.links.NetGrossLink;
 import org.wickedsource.budgeteer.web.pages.base.basepage.BasePage;
 import org.wickedsource.budgeteer.web.pages.base.basepage.breadcrumbs.BreadcrumbsModel;
@@ -26,13 +25,14 @@ import org.wickedsource.budgeteer.web.pages.budgets.overview.table.BudgetOvervie
 import org.wickedsource.budgeteer.web.pages.budgets.overview.table.FilteredBudgetModel;
 import org.wickedsource.budgeteer.web.pages.budgets.weekreport.multi.MultiBudgetWeekReportPage;
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.ArrayList;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
 
-@Mount("budgets")
+@MountPath("budgets")
 public class BudgetsOverviewPage extends BasePage {
 
     @SpringBean

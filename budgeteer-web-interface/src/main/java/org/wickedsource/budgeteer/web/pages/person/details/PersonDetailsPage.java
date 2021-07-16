@@ -8,7 +8,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wickedsource.budgeteer.service.person.PersonService;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.components.confirm.ConfirmationForm;
 import org.wickedsource.budgeteer.web.pages.base.basepage.BasePage;
 import org.wickedsource.budgeteer.web.pages.base.basepage.breadcrumbs.Breadcrumb;
@@ -25,8 +24,9 @@ import org.wickedsource.budgeteer.web.pages.person.hours.PersonHoursPage;
 import org.wickedsource.budgeteer.web.pages.person.monthreport.PersonMonthReportPage;
 import org.wickedsource.budgeteer.web.pages.person.overview.PeopleOverviewPage;
 import org.wickedsource.budgeteer.web.pages.person.weekreport.PersonWeekReportPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
-@Mount("people/details/${id}")
+@MountPath("people/details/${id}")
 public class PersonDetailsPage extends BasePage {
 
     @SpringBean

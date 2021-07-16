@@ -11,7 +11,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wickedsource.budgeteer.service.invoice.InvoiceService;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.components.confirm.ConfirmationForm;
 import org.wickedsource.budgeteer.web.pages.base.basepage.BasePage;
 import org.wickedsource.budgeteer.web.pages.base.basepage.breadcrumbs.BreadcrumbsModel;
@@ -19,8 +18,9 @@ import org.wickedsource.budgeteer.web.pages.contract.details.ContractDetailsPage
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
 import org.wickedsource.budgeteer.web.pages.invoice.details.highlights.InvoiceHighlightsPanel;
 import org.wickedsource.budgeteer.web.pages.invoice.edit.EditInvoicePage;
+import org.wicketstuff.annotation.mount.MountPath;
 
-@Mount("invoices/details/${id}")
+@MountPath("invoices/details/${id}")
 public class InvoiceDetailsPage extends BasePage {
 
     @SpringBean

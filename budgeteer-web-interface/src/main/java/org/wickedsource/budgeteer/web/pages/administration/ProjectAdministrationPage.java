@@ -19,7 +19,6 @@ import org.wickedsource.budgeteer.service.user.UserService;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
 import org.wickedsource.budgeteer.web.BudgeteerSettings;
 import org.wickedsource.budgeteer.web.ClassAwareWrappingModel;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.components.customFeedback.CustomFeedbackPanel;
 import org.wickedsource.budgeteer.web.components.daterange.DateRangeInputField;
 import org.wickedsource.budgeteer.web.pages.base.basepage.BasePage;
@@ -29,13 +28,14 @@ import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
 import org.wickedsource.budgeteer.web.pages.user.login.LoginPage;
 import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectPage;
 import org.wickedsource.budgeteer.web.pages.user.selectproject.SelectProjectWithKeycloakPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
 
-@Mount("/administration")
+@MountPath("/administration")
 public class ProjectAdministrationPage extends BasePage {
 
     @SpringBean

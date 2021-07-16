@@ -6,12 +6,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.pages.base.dialogpage.DialogPageWithBacklink;
 import org.wickedsource.budgeteer.web.pages.templates.TemplatesPage;
-import org.wickedsource.budgeteer.web.pages.templates.table.TemplateListModel;
-import org.wickedsource.budgeteer.web.pages.templates.table.TemplatesTable;
 import org.wickedsource.budgeteer.web.pages.templates.templateimport.TemplateFormInputDto;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
@@ -21,7 +19,7 @@ import static org.wicketstuff.lazymodel.LazyModel.model;
  *
  * @author maximAtanasov
  */
-@Mount("templates/editTemplates/#{id}")
+@MountPath("templates/editTemplates/#{id}")
 public class EditTemplatePage extends DialogPageWithBacklink {
 
     /**

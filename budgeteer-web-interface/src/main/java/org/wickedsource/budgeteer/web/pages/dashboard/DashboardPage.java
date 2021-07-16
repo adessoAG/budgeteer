@@ -4,7 +4,6 @@ package org.wickedsource.budgeteer.web.pages.dashboard;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.wickedsource.budgeteer.web.BudgeteerSession;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.pages.base.basepage.BasePage;
 import org.wickedsource.budgeteer.web.pages.base.basepage.breadcrumbs.BreadcrumbsModel;
 import org.wickedsource.budgeteer.web.pages.budgets.overview.BudgetsOverviewPage;
@@ -18,8 +17,9 @@ import org.wickedsource.budgeteer.web.pages.imports.ImportsOverviewPage;
 import org.wickedsource.budgeteer.web.pages.invoice.overview.InvoiceOverviewPage;
 import org.wickedsource.budgeteer.web.pages.person.overview.PeopleOverviewPage;
 import org.wickedsource.budgeteer.web.pages.templates.TemplatesPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
-@Mount("dashboard")
+@MountPath("dashboard")
 public class DashboardPage extends BasePage {
 
     /**

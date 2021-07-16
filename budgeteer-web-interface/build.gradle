@@ -65,6 +65,7 @@ dependencies {
             [group: 'org.apache.wicket', name: 'wicket-spring', version: "${wicket_spring_version}"],
             [group: 'org.apache.wicket', name: 'wicket-extensions', version: "${wicket_spring_version}"],
             [group: 'org.wicketstuff', name: 'wicketstuff-lazymodel', version: "${wicketstuff_lazymodel_version}"],
+            [group: 'org.wicketstuff', name: 'wicketstuff-annotation', version: "${wicketstuff_lazymodel_version}"],
             [group: 'org.wicketstuff', name: 'wicketstuff-tinymce4', version: "${wicketstuff_tinymce4_version}"],
             [group: 'de.adesso.wicked-charts', name: 'wicked-charts-wicket7', version: "${wickedcharts_version}"]
     )
@@ -83,7 +84,6 @@ dependencies {
     compile group: 'ch.qos.logback', name: 'logback-classic', version: "${logback_version}"
     compile group: 'ch.qos.logback', name: 'logback-core', version: "${logback_version}"
 
-    compile group: 'org.reflections', name: 'reflections', version: "${reflections_version}"
     compile group: 'org.apache.commons', name: 'commons-lang3', version: "${commons_lang_version}"
     compile group: 'commons-codec', name: 'commons-codec', version: "${commons_codec_version}"
 

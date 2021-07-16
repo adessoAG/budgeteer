@@ -7,15 +7,15 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 import org.wickedsource.budgeteer.service.invoice.InvoiceBaseData;
 import org.wickedsource.budgeteer.service.invoice.InvoiceService;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.pages.base.dialogpage.DialogPageWithBacklink;
 import org.wickedsource.budgeteer.web.pages.invoice.edit.form.EditInvoiceForm;
 import org.wickedsource.budgeteer.web.pages.invoice.overview.InvoiceOverviewPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
 
-@Mount("/invoices/edit/${invoiceId}/#{contractId}")
+@MountPath("/invoices/edit/${invoiceId}/#{contractId}")
 public class EditInvoicePage extends DialogPageWithBacklink {
 
     @SpringBean

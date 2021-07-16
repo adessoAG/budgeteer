@@ -2,7 +2,7 @@ package org.wickedsource.budgeteer.web.pages.monitoring;
 
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.WebPage;
-import org.wickedsource.budgeteer.web.Mount;
+import org.wicketstuff.annotation.mount.MountPath;
 
 /**
  * A dedicated page to display the current status of the application.
@@ -10,7 +10,7 @@ import org.wickedsource.budgeteer.web.Mount;
  * <p>This page is solely used for monitoring purposes. Currently we do not check any further resources, so that the
  * status is “operable” whenever the Spring container is up and running.</p>
  */
-@Mount("/status")
+@MountPath("/status")
 public class StatusPage extends WebPage {
 
     /**

@@ -6,7 +6,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 import org.wickedsource.budgeteer.service.budget.BudgetService;
 import org.wickedsource.budgeteer.service.budget.EditBudgetData;
-import org.wickedsource.budgeteer.web.Mount;
 import org.wickedsource.budgeteer.web.pages.base.basepage.BasePage;
 import org.wickedsource.budgeteer.web.pages.base.basepage.breadcrumbs.Breadcrumb;
 import org.wickedsource.budgeteer.web.pages.base.basepage.breadcrumbs.BreadcrumbsModel;
@@ -15,11 +14,12 @@ import org.wickedsource.budgeteer.web.pages.budgets.details.BudgetDetailsPage;
 import org.wickedsource.budgeteer.web.pages.budgets.notes.form.BudgetNotesForm;
 import org.wickedsource.budgeteer.web.pages.budgets.overview.BudgetsOverviewPage;
 import org.wickedsource.budgeteer.web.pages.dashboard.DashboardPage;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import static org.wicketstuff.lazymodel.LazyModel.from;
 import static org.wicketstuff.lazymodel.LazyModel.model;
 
-@Mount("budgets/notes/${id}")
+@MountPath("budgets/notes/${id}")
 public class BudgetNotesPage extends BasePage {
 
     @SpringBean
